@@ -3,6 +3,12 @@
 %ul
   %li= @sp.name
 
+%h2= 'Consumers'
+
+%ul
+  - @sp.consumers.each do |consumer|
+    %li= consumer.name
+
 = form_tag(service_provider_consumers_path(@sp)) do |f|
   = hidden_field_tag(:service_provider_id, @sp.id)
   = label_tag(:name, 'Consumer name:')
