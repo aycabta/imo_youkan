@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   resources :service_providers, only: [:new, :create, :show] do
     resources :consumers, only: [:index, :create]
   end
-  post '/oauth2/token', to: 'oauth2#token', as: 'oauth2_token'
+  post '/:service_provider_id/oauth2/token', to: 'oauth2#token', as: 'oauth2_token'
 end
