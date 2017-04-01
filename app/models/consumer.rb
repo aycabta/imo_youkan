@@ -5,14 +5,10 @@ class Consumer < ApplicationRecord
   has_many :tokens
   has_many :accessible_scopes, :through => :consumer_scopes
 
-  after_initialize :set_default, if: :new_record?
+  after_commit :generate_client_key_and_secret, unless: :client_id_key?
 
-  private def set_default
-    generate_key_and_secret
-  end
-
-  private def generate_key_and_secret
-    @client_id_key = "#{@id}_#{SecureRandom.urlsafe_base64(16)}"
-    @client_secret = SecureRandom.urlsafe_base64(32)
+  private def generate_client_key_and_secret
+    self.client_id_key = "#{self.id}_#{SecureRandom.urlsafe_base64(16)}"
+    self.client_secret = SecureRandom.urlsafe_base64(32)
   end
 end
