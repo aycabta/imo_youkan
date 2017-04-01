@@ -1,0 +1,16 @@
+= form_for(@sp, url: service_providers_create_path) do |f|
+  - if @sp.errors.any?
+    %div{ id: 'error_explanation' }
+      %h2
+        = pluralize(user.errors.count, 'error')
+        = 'prohibited this user from being saved:'
+      %ul
+        - user.errors.full_messages.each do |message|
+          %li
+            = message
+
+  %div{ class: 'field' }
+    = f.label :name
+    = f.text_field :name
+  %div{ class: 'actions' }
+    = f.submit
