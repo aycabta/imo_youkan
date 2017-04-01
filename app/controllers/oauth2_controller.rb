@@ -7,8 +7,16 @@ class OAuth2Controller < ApplicationController
   end
 
   def token
-    render :json => {
-      expires_in: 3600
-    }
+    if params[:grant_type] == 'client_credentials'
+      consumer = Consumer.where(client_id: params[:client_id], client_secret: params[:client_secret])
+      token = consumer.tokens.create
+      token.set_as_client_credentials
+      render :json => {
+        expires_in: 3600,
+        status: 'success',
+        access_token: token.access_token,
+        token_type: token.token_type
+      }
+    end
   end
 end
