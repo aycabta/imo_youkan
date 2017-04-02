@@ -4,10 +4,10 @@ class Token < ApplicationRecord
   belongs_to :consumer
   has_many :approved_scopes, :through => :token_scopes
 
-  def set_as_client_credentials(expires_in_interval: 3600)
+  def set_as_client_credentials
     generate_access_token
     self.token_type = 'Bearer'
-    self.expires_in = Time.now.since(expires_in_interval.seconds)
+    self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
     self.save
   end
 
