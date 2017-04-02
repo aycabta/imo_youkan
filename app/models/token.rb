@@ -8,6 +8,7 @@ class Token < ApplicationRecord
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(expires_in_interval.seconds)
+    self.save
   end
 
   def generate_code
