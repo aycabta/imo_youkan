@@ -13,6 +13,7 @@ module DivineApproval
     # -- all .rb files in that directory are automatically loaded.
     config.generators do |g|
       g.template_engine :haml
+      g.test_framework :test_unit
     end
   end
 end
