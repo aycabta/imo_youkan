@@ -10,6 +10,10 @@ class Token < ApplicationRecord
     self.expires_in = Time.now.since(expires_in_interval.seconds)
   end
 
+  def generate_code
+    self.code = SecureRandom.urlsafe_base64(64)
+  end
+
   def generate_access_token
     self.access_token = SecureRandom.urlsafe_base64(64)
   end
