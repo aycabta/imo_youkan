@@ -10,7 +10,7 @@ class ServiceProvidersController < ApplicationController
   def create
     @sp = ServiceProvider.new(service_provider_params)
     @sp.save
-    redirect_to(service_providers_path(@sp))
+    redirect_to(service_provider_path(@sp))
   end
 
   def show
