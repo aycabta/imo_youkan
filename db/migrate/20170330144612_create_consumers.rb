@@ -5,6 +5,7 @@ class CreateConsumers < ActiveRecord::Migration[5.0]
       t.string :name
       t.string :client_id_key
       t.string :client_secret
+      t.integer :seconds_to_expire, default: 3600
 
       t.timestamps
     end
