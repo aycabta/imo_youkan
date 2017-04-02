@@ -17,4 +17,8 @@ class Token < ApplicationRecord
   def generate_access_token
     self.access_token = SecureRandom.urlsafe_base64(64)
   end
+
+  def generate_refresh_token
+    self.refresh_token = SecureRandom.urlsafe_base64(64)
+  end
 end
