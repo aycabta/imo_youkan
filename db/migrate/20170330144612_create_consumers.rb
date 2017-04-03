@@ -8,9 +8,9 @@ class CreateConsumers < ActiveRecord::Migration[5.0]
       t.integer :seconds_to_expire, default: 3600
 
       t.timestamps
-    end
 
-    add_index :consumers, :client_id_key, unique: true
-    add_index :consumers, :client_secret, unique: true
+      t.index :client_id_key, unique: true
+      t.index :client_secret, unique: true
+    end
   end
 end

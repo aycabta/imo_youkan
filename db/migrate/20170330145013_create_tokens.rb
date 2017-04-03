@@ -11,9 +11,9 @@ class CreateTokens < ActiveRecord::Migration[5.0]
       t.string :refresh_token
 
       t.timestamps
-    end
 
-    add_index :tokens, [:consumer_id, :access_token], unique: true
-    add_index :tokens, [:consumer_id, :refresh_token], unique: true
+      t.index [:consumer_id, :access_token], unique: true
+      t.index [:consumer_id, :refresh_token], unique: true
+    end
   end
 end

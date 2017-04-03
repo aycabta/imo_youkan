@@ -5,8 +5,8 @@ class CreateScopes < ActiveRecord::Migration[5.0]
       t.string :name
 
       t.timestamps
-    end
 
-    add_index :consumers, :name, unique: true
+      t.index :name, unique: true
+    end
   end
 end
