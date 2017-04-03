@@ -2,6 +2,7 @@ class CreateTokens < ActiveRecord::Migration[5.0]
   def change
     create_table :tokens do |t|
       t.references :consumer, foreign_key: true
+      t.references :user, foreign_key: true
       t.datetime :expires_in
       t.string :state
       t.string :code
