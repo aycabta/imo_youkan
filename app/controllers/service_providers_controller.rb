@@ -1,4 +1,6 @@
 class ServiceProvidersController < ApplicationController
+  before_action :authorize!, only: [:new, :create, :show]
+
   def index
     @sps = ServiceProvider.all
   end
