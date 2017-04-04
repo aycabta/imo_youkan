@@ -7,4 +7,9 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
+    - if current_user
+      = form_tag(logout_path) do |f|
+        = submit_tag('Log out')
+    - else
+      %p= link_to 'Login with GitHub', '/auth/github'
     = yield
