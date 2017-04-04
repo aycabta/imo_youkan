@@ -8,7 +8,6 @@ class User < ApplicationRecord
     user.email = auth['info']['email']
     user.name = auth['info']['name']
     user.image_url = auth['info']['image']
-    user.token = auth['credentials']['token']
 
     user.save
     user
