@@ -12,8 +12,8 @@ module ImoYoukan
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.generators do |g|
-      g.template_engine :haml
-      g.test_framework :test_unit
+      g.template_engine(:haml)
+      g.test_framework(:test_unit)
     end
   end
 end
