@@ -4,6 +4,7 @@ class Consumer < ApplicationRecord
   belongs_to :service_provider
   has_many :tokens
   has_many :accessible_scopes, :through => :consumer_scopes
+  belongs_to :owner, foreign_key: 'user_id', :class_name => 'User'
 
   after_commit :generate_client_key_and_secret, unless: :client_id_key?
 
