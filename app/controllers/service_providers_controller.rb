@@ -6,10 +6,6 @@ class ServiceProvidersController < ApplicationController
     @sps = ServiceProvider.all
   end
 
-  def new
-    @sp = ServiceProvider.new
-  end
-
   def create
     @sp = ServiceProvider.new(service_provider_params)
     @sp.save
