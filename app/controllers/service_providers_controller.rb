@@ -8,6 +8,7 @@ class ServiceProvidersController < ApplicationController
 
   def create
     @sp = ServiceProvider.new(service_provider_params)
+    @sp.users << current_user
     @sp.save
     redirect_to(service_provider_path(@sp))
   end
