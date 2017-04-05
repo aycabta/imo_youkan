@@ -14,7 +14,10 @@ class ServiceProvidersController < ApplicationController
   end
 
   def show
-    @sp = ServiceProvider.find(params[:id])
+    @sp = ServiceProvider.includes(:users).find_by(id: params[:id], users: { id: current_user.id })
+    if @sp.nil?
+      render file: Rails.root.join('public/404.html'), status: 404, layout: false, content_type: 'text/html'
+    end
   end
 
   private def service_provider_params
