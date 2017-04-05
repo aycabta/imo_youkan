@@ -2,8 +2,7 @@
 
 - if current_user
   = render partial: 'form', locals: { sp: @new_sp }
-
-%ul
-  - @sps.each do |sp|
-    %li
-      = link_to(sp.name, service_provider_path(sp))
+  %ul
+    - @sps.each do |sp|
+      %li
+        = link_to(sp.name, service_provider_path(sp))

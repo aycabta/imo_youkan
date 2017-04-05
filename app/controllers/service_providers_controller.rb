@@ -3,7 +3,7 @@ class ServiceProvidersController < ApplicationController
 
   def index
     @new_sp = ServiceProvider.new
-    @sps = ServiceProvider.all
+    @sps = ServiceProvider.includes(:users).where(users: { id: current_user.id }) if current_user
   end
 
   def create
