@@ -16,11 +16,11 @@ class OAuth2Controller < ApplicationController
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = consumer.tokens.create
     token.set_as_client_credentials
-    render :json => {
+    render(:json => {
       expires_in: consumer.seconds_to_expire,
       status: 'success',
       access_token: token.access_token,
       token_type: token.token_type
-    }
+    })
   end
 end
