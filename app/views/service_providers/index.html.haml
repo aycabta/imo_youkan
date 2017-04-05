@@ -1,5 +1,8 @@
 %h1= 'index'
 
+- if current_user
+  = render partial: 'form', locals: { sp: @new_sp }
+
 %ul
   - @sps.each do |sp|
     %li

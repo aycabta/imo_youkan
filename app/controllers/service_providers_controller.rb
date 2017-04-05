@@ -2,6 +2,7 @@ class ServiceProvidersController < ApplicationController
   before_action :authorize!, only: [:new, :create, :show]
 
   def index
+    @new_sp = ServiceProvider.new
     @sps = ServiceProvider.all
   end
 
