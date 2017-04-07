@@ -16,18 +16,19 @@ class ServiceProvidersController < ApplicationController
     case params[:type]
     when 'add_user'
       @sp = ServiceProvider.find(params[:id])
+      return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
       user = User.find_by(email: params[:email])
       redirect_to(service_provider_path(@sp)) unless user
       @sp.add_user(user)
       @sp.save
-      redirect_to(service_provider_path(@sp))
+      return redirect_to(service_provider_path(@sp))
     when 'add_scope'
       @sp = ServiceProvider.find(params[:id])
-      redirect_to(service_provider_path(@sp)) unless current_user.id == @sp.owner.id
+      return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
       scope = Scope.create(service_provider: @sp, name: params[:name])
       @sp.users << user
       @sp.save
-      redirect_to(service_provider_path(@sp))
+      return redirect_to(service_provider_path(@sp))
     end
   end
 
