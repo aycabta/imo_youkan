@@ -14,12 +14,15 @@ class ServiceProvidersController < ApplicationController
   end
 
   def update
-    @sp = ServiceProvider.find(params[:id])
-    user = User.find_by(email: params[:email])
-    redirect_to(service_provider_path(@sp)) unless user
-    @sp.users << user
-    @sp.save
-    redirect_to(service_provider_path(@sp))
+    case params[:type]
+    when 'add_user'
+      @sp = ServiceProvider.find(params[:id])
+      user = User.find_by(email: params[:email])
+      redirect_to(service_provider_path(@sp)) unless user
+      @sp.users << user
+      @sp.save
+      redirect_to(service_provider_path(@sp))
+    end
   end
 
   def show

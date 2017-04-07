@@ -20,6 +20,7 @@
         %dd= user.email
 
 = form_tag(service_provider_path(@sp), method: :put) do |f|
+  = hidden_field_tag(:type, 'add_user')
   = text_field_tag(:email, '', placeholder: 'e-mail address')
   = submit_tag('Add user')
 
