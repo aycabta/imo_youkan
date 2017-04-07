@@ -16,6 +16,12 @@
         %dt= 'email'
         %dd= user.email
 
+= form_tag(service_provider_path(@sp), method: :put) do |f|
+  = hidden_field_tag(:service_provider_id, @sp.id)
+  = label_tag(:email, 'Add user by e-mail address:')
+  = text_field_tag(:email)
+  = submit_tag('Add user')
+
 %h2= 'Your consumers'
 
 %dl
