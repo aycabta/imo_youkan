@@ -13,23 +13,20 @@ class ServiceProvidersController < ApplicationController
   end
 
   def update
+    @sp = ServiceProvider.find(params[:id])
+    return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user) # FIXME: render forbidden page
     case params[:type]
     when 'add_user'
-      @sp = ServiceProvider.find(params[:id])
-      return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
       user = User.find_by(email: params[:email])
-      redirect_to(service_provider_path(@sp)) unless user
+      return redirect_to(service_provider_path(@sp)) unless user
       @sp.add_user(user)
       @sp.save
-      return redirect_to(service_provider_path(@sp))
     when 'add_scope'
-      @sp = ServiceProvider.find(params[:id])
-      return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
       scope = Scope.create(service_provider: @sp, name: params[:name])
       @sp.scopes << scope
       @sp.save
-      return redirect_to(service_provider_path(@sp))
     end
+    redirect_to(service_provider_path(@sp))
   end
 
   def show
