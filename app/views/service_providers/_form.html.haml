@@ -10,7 +10,6 @@
             = message
 
   %div{ class: 'field' }
-    = f.label(:name)
-    = f.text_field(:name)
+    = f.text_field(:name, placeholder: 'name')
   %div{ class: 'actions' }
     = f.submit('Create service provider')
