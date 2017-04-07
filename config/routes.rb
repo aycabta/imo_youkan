@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'service_providers#index'
-  resources :service_providers, only: [:create, :show] do
+  resources :service_providers, only: [:create, :show, :update] do
     resources :consumers, only: [:index, :create]
   end
   post '/:service_provider_id/oauth2/token', to: 'oauth2#token', as: 'oauth2_token'
