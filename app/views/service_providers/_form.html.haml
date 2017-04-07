@@ -9,7 +9,5 @@
           %li
             = message
 
-  %div{ class: 'field' }
-    = f.text_field(:name, placeholder: 'name')
-  %div{ class: 'actions' }
-    = f.submit('Create service provider')
+  = f.text_field(:name, placeholder: 'name')
+  = f.submit('Create service provider')
