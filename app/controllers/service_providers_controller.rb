@@ -34,6 +34,7 @@ class ServiceProvidersController < ApplicationController
     if @sp.nil?
       render(file: Rails.root.join('public/404.html'), status: 404, layout: false, content_type: 'text/html')
     end
+    @is_owner = @sp.owner?(current_user)
   end
 
   private def service_provider_params
