@@ -3,6 +3,19 @@
 %ul
   %li= @sp.name
 
+%h2= 'Users'
+
+%ul
+  - @sp.users.all.each do |user|
+    %li
+      %dl
+        %dt= 'name'
+        %dd= user.name
+        %dt= 'nickname'
+        %dd= user.nickname
+        %dt= 'email'
+        %dd= user.email
+
 %h2= 'Your consumers'
 
 %dl
