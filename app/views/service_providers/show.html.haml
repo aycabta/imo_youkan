@@ -8,6 +8,10 @@
 
 %h2= 'Scopes'
 
+%ul
+  - @sp.scopes.each do |scope|
+    %li= scope.name
+
 = form_tag(service_provider_path(@sp), method: :put) do |f|
   = hidden_field_tag(:type, 'add_scope')
   = text_field_tag(:name, '', placeholder: 'name')
