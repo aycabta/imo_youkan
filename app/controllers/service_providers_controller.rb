@@ -7,9 +7,8 @@ class ServiceProvidersController < ApplicationController
   end
 
   def create
-    @sp = ServiceProvider.new(service_provider_params)
-    @sp.users << current_user
-    @sp.save
+    @sp = ServiceProvider.create(service_provider_params)
+    @sp.add_user_as_owner(current_user)
     redirect_to(service_provider_path(@sp))
   end
 
@@ -19,7 +18,7 @@ class ServiceProvidersController < ApplicationController
       @sp = ServiceProvider.find(params[:id])
       user = User.find_by(email: params[:email])
       redirect_to(service_provider_path(@sp)) unless user
-      @sp.users << user
+      @sp.add_user(user)
       @sp.save
       redirect_to(service_provider_path(@sp))
     when 'add_scope'
