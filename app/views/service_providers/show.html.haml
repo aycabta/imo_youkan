@@ -21,8 +21,7 @@
 
 = form_tag(service_provider_path(@sp), method: :put) do |f|
   = hidden_field_tag(:service_provider_id, @sp.id)
-  = label_tag(:email, 'Add user by e-mail address:')
-  = text_field_tag(:email)
+  = text_field_tag(:email, '', placeholder: 'e-mail address')
   = submit_tag('Add user')
 
 %h2= 'Your consumers'
@@ -39,6 +38,5 @@
 
 = form_tag(service_provider_consumers_path(@sp)) do |f|
   = hidden_field_tag(:service_provider_id, @sp.id)
-  = label_tag(:name, 'Consumer name:')
-  = text_field_tag(:name)
+  = text_field_tag(:name, '', placeholder: 'name')
   = submit_tag('Create consumer')
