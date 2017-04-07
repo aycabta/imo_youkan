@@ -26,7 +26,7 @@ class ServiceProvidersController < ApplicationController
       @sp = ServiceProvider.find(params[:id])
       return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
       scope = Scope.create(service_provider: @sp, name: params[:name])
-      @sp.users << user
+      @sp.scopes << scope
       @sp.save
       return redirect_to(service_provider_path(@sp))
     end
