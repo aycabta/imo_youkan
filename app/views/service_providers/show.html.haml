@@ -5,9 +5,16 @@
 
 %h2= 'Consumers'
 
-%ul
+%dl
   - @sp.consumers.each do |consumer|
-    %li= consumer.name
+    %dt= consumer.name
+    %dd
+      %dl
+        %dt= 'client_id'
+        %dd= consumer.client_id_key
+        %dt= 'client_secret'
+        %dd= consumer.client_secret
+
 
 = form_tag(service_provider_consumers_path(@sp)) do |f|
   = hidden_field_tag(:service_provider_id, @sp.id)
