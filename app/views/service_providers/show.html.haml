@@ -43,7 +43,7 @@
 %h2= 'Your consumers'
 
 %dl
-  - @sp.consumers.each do |consumer|
+  - @sp.consumers_by_user(current_user).each do |consumer|
     %dt= consumer.name
     %dd
       %dl

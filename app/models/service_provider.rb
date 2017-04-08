@@ -13,6 +13,10 @@ class ServiceProvider < ApplicationRecord
     ServiceProvider.includes(:service_provider_users).exists?(id: self.id, service_provider_users: { user: user })
   end
 
+  def consumers_by_user(user)
+    Consumer.includes(:service_provider).where(service_provider: self, owner: user)
+  end
+
   def add_user(user)
     unless user_belongs?(user)
       sp_user = ServiceProviderUser.new
