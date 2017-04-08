@@ -32,7 +32,7 @@ class ServiceProvidersController < ApplicationController
   def show
     @sp = ServiceProvider.includes(:users).find_by(id: params[:id], users: { id: current_user.id })
     if @sp.nil?
-      render(file: Rails.root.join('public/404.html'), status: 404, layout: false, content_type: 'text/html')
+      return render(file: Rails.root.join('public/404.html'), status: 404, layout: false, content_type: 'text/html')
     end
     @is_owner = @sp.owner?(current_user)
   end
