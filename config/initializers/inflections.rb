@@ -17,7 +17,7 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym('OAuth2')
-  inflect.acronym('URL')
-  inflect.acronym('URLs')
-  inflect.irregular('URL', 'URLs')
+  inflect.acronym('URI')
+  inflect.acronym('URIs')
+  inflect.irregular('URI', 'URIs')
 end
