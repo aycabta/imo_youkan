@@ -13,6 +13,13 @@ class Token < ApplicationRecord
     self.save
   end
 
+  def set_as_implicit
+    generate_access_token
+    self.token_type = 'Bearer'
+    self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
+    self.save
+  end
+
   def generate_code
     self.code = SecureRandom.urlsafe_base64(64)
   end
