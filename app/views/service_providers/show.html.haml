@@ -51,6 +51,15 @@
         %dd= consumer.client_id_key
         %dt= 'client_secret'
         %dd= consumer.client_secret
+        %dt= 'redirect URIs'
+        %dd
+          %ul
+            - consumer.redirect_uris.each do |redirect_uri|
+              %li= redirect_uri.uri
+          = form_tag(service_provider_consumer_path(@sp), method: :put) do |f|
+            = hidden_field_tag(:type, 'add_redirect_uri')
+            = text_field_tag(:redirect_uri, '', placeholder: 'redirect URI')
+            = submit_tag('Add redirect URI')
 
 = form_tag(service_provider_consumers_path(@sp)) do |f|
   = text_field_tag(:name, '', placeholder: 'name')
