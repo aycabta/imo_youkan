@@ -6,6 +6,33 @@ class OAuth2Controller < ApplicationController
     @sp = ServiceProvider.find(params[:service_provider_id])
   end
 
+  def authorize
+    if params[:response_type] == 'token'
+      implicit_token
+    end
+  end
+
+  private def implicit_token
+    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    rejected_scopes = params[:scope].split(' ').select { |given_scope| !consumer.service_provider.scopes.find { |scope| scope.name == given_scope } }
+    unless rejected_scopes.empty?
+      redirect_params = {
+        error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
+      }
+      return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+    end
+    token = consumer.tokens.create
+    token.set_as_implicit
+    redirect_params = {
+      access_token: token.access_token,
+      token_type: 'bearer',
+      expires_in: 3600,
+      scope: 'basic',
+      state: params[:state]
+    }
+    redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+  end
+
   def token
     if params[:grant_type] == 'client_credentials'
       client_credentials_token

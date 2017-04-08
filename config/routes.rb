@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :consumers, only: [:index, :create, :update]
   end
   post '/:service_provider_id/oauth2/token', to: 'oauth2#token', as: 'oauth2_token'
+  get '/:service_provider_id/oauth2/authorize', to: 'oauth2#authorize', as: 'oauth2_authorize'
   get '/auth/:provider/callback', to: 'sessions#create', as: 'auth_callback'
   post '/logout', to: 'sessions#destroy'
 end
