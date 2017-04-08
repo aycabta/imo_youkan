@@ -6,7 +6,7 @@ class ServiceProvider < ApplicationRecord
   has_many :owners, -> { where(service_provider_users: {is_owner: true}) }, :through => :service_provider_users, :source => :user
 
   def owner?(user)
-    !!ServiceProvider.includes(:service_provider_users).find_by(id: self.id, service_provider_users: { is_owner: true, user: user })
+    ServiceProvider.includes(:service_provider_users).exists?(id: self.id, service_provider_users: { is_owner: true, user: user })
   end
 
   def add_user(user)
