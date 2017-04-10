@@ -71,6 +71,8 @@ class OAuth2Controller < ApplicationController
   def token
     if params[:grant_type] == 'client_credentials'
       client_credentials_token
+    elsif params[:grant_type] == 'authorization_code'
+      authorization_code_token
     end
   end
 
@@ -83,6 +85,20 @@ class OAuth2Controller < ApplicationController
       status: 'success',
       access_token: token.access_token,
       token_type: token.token_type
+    })
+  end
+
+  private def authorization_code_token
+    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], client_secret: params[:client_secret], redirect_uris: { uri: params[:redirect_uri] })
+    token = consumer.tokens.find_by(grant: 'authorization_code', code: params[:code])
+    token.set_tokens_for_authorization_code
+    render(:json => {
+      expires_in: consumer.seconds_to_expire,
+      status: 'success',
+      access_token: token.access_token,
+      token_type: token.token_type,
+      refresh_token: token.refresh_token,
+      scope: token.approved_scopes.map { |s| s.name }.join(' ')
     })
   end
 end

@@ -33,6 +33,13 @@ class Token < ApplicationRecord
     self.save
   end
 
+  def set_tokens_for_authorization_code
+    self.generate_access_token
+    self.generate_refresh_token
+    self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
+    self.save
+  end
+
   def generate_code
     self.code = SecureRandom.urlsafe_base64(64)
   end
