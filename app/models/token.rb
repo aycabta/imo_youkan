@@ -7,6 +7,7 @@ class Token < ApplicationRecord
   belongs_to :user
 
   def set_as_client_credentials
+    self.grant = 'client_credentials'
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
@@ -14,6 +15,7 @@ class Token < ApplicationRecord
   end
 
   def set_as_implicit
+    self.grant = 'implicit'
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)

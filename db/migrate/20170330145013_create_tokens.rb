@@ -4,6 +4,7 @@ class CreateTokens < ActiveRecord::Migration[5.0]
       t.references :consumer, foreign_key: true
       t.references :user, foreign_key: true
       t.datetime :expires_in
+      t.string :grant
       t.string :state
       t.string :code
       t.string :token_type
