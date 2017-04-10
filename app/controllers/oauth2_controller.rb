@@ -57,6 +57,17 @@ class OAuth2Controller < ApplicationController
     end
   end
 
+  def authorize_redirect_with_code
+    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
+    redirect_uri = consumer.redirect_uris.first.uri
+    redirect_params = {
+      code: token.code,
+      state: token.state
+    }
+    redirect_to("#{redirect_uri}?#{redirect_params.to_param}")
+  end
+
   def token
     if params[:grant_type] == 'client_credentials'
       client_credentials_token
