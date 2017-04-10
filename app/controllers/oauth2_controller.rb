@@ -23,7 +23,7 @@ class OAuth2Controller < ApplicationController
       }
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
     end
-    token = consumer.tokens.create
+    token = consumer.tokens.find_or_create_by(grant: 'implicit', user: current_user)
     token.set_as_implicit(params[:scope].split(' '))
     token.state = params[:state]
     token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
