@@ -54,6 +54,7 @@ class OAuth2Controller < ApplicationController
       @scopes = consumer.service_provider.scopes.select { |s| params[:scope].split(' ').include?(s.name) }
       render(:authorize)
     else
+      session[:continued_url] = request.url
       render(:authorize_login)
     end
   end
