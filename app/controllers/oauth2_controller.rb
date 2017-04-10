@@ -48,6 +48,7 @@ class OAuth2Controller < ApplicationController
       @token = consumer.tokens.find_or_create_by(grant: 'authorization_code', user: current_user)
       @token.set_as_authorization_code(params[:scope].split(' '))
       @token.state = params[:state]
+      @token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
       @token.save
       @state = params[:state]
       @scopes = consumer.service_provider.scopes.select { |s| params[:scope].split(' ').include?(s.name) }
@@ -60,12 +61,11 @@ class OAuth2Controller < ApplicationController
   def authorize_redirect_with_code
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
-    redirect_uri = consumer.redirect_uris.first.uri
     redirect_params = {
       code: token.code,
       state: token.state
     }
-    redirect_to("#{redirect_uri}?#{redirect_params.to_param}")
+    redirect_to("#{token.redirect_uri.uri}?#{redirect_params.to_param}")
   end
 
   def token

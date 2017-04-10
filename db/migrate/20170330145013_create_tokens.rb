@@ -3,6 +3,7 @@ class CreateTokens < ActiveRecord::Migration[5.0]
     create_table :tokens do |t|
       t.references :consumer, foreign_key: true
       t.references :user, foreign_key: true
+      t.references :redirect_uri, foreign_key: true
       t.datetime :expires_in
       t.string :grant
       t.string :state
