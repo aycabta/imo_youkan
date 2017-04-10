@@ -25,14 +25,10 @@ class OAuth2Controller < ApplicationController
     end
     token = consumer.tokens.create
     token.set_as_implicit(params[:scope].split(' '))
-    redirect_params = {
-      access_token: token.access_token,
-      token_type: 'bearer',
-      expires_in: 3600,
-      scope: 'basic',
-      state: params[:state]
-    }
-    redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+    token.state = params[:state]
+    token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
+    token.save
+    redirect_to(token.redirect_uri_to_implicit_token)
   end
 
   private def authorization_code
@@ -62,11 +58,7 @@ class OAuth2Controller < ApplicationController
   def authorize_redirect_with_code
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
-    redirect_params = {
-      code: token.code,
-      state: token.state
-    }
-    redirect_to("#{token.redirect_uri.uri}?#{redirect_params.to_param}")
+    redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
   end
 
   def token
@@ -81,25 +73,13 @@ class OAuth2Controller < ApplicationController
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = consumer.tokens.create
     token.set_as_client_credentials
-    render(json: {
-      expires_in: consumer.seconds_to_expire,
-      status: 'success',
-      access_token: token.access_token,
-      token_type: token.token_type
-    })
+    render(token.client_credentials_token_json)
   end
 
   private def authorization_code_token
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], client_secret: params[:client_secret], redirect_uris: { uri: params[:redirect_uri] })
     token = consumer.tokens.find_by(grant: 'authorization_code', code: params[:code])
     token.set_tokens_for_authorization_code
-    render(json: {
-      expires_in: consumer.seconds_to_expire,
-      status: 'success',
-      access_token: token.access_token,
-      token_type: token.token_type,
-      refresh_token: token.refresh_token,
-      scope: token.approved_scopes.map { |s| s.name }.join(' ')
-    })
+    render(authorization_code_token_json)
   end
 end

@@ -51,4 +51,43 @@ class Token < ApplicationRecord
   def generate_refresh_token
     self.refresh_token = SecureRandom.urlsafe_base64(64)
   end
+
+  def redirect_uri_to_implicit_token
+    redirect_params = {
+      access_token: self.access_token,
+      token_type: 'bearer',
+      expires_in: 3600,
+      scope: 'basic',
+      state: self.state
+    }
+    "#{self.redirect_uri.uri}##{redirect_params.to_param}"
+  end
+
+  def redirect_uri_to_authorize_redirect_with_code
+    redirect_params = {
+      code: self.code,
+      state: self.state
+    }
+    "#{self.redirect_uri.uri}?#{redirect_params.to_param}"
+  end
+
+  def client_credentials_token_json
+    {
+      expires_in: self.consumer.seconds_to_expire,
+      status: 'success',
+      access_token: self.access_token,
+      token_type: self.token_type
+    }
+  end
+
+  def authorization_code_token_json
+    {
+      expires_in: self.consumer.seconds_to_expire,
+      status: 'success',
+      access_token: self.access_token,
+      token_type: self.token_type,
+      refresh_token: self.refresh_token,
+      scope: self.token.approved_scopes.map { |s| s.name }.join(' ')
+    }
+  end
 end
