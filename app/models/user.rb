@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_one :token
   has_many :service_provider_users
-  has_many :service_providers, :through => :service_provider_users
+  has_many :service_providers, through: :service_provider_users
   has_many :consumers
 
   def self.find_or_create_by_auth(auth)

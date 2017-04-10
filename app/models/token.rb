@@ -3,8 +3,8 @@ require 'securerandom'
 class Token < ApplicationRecord
   belongs_to :consumer
   has_many :token_scopes
-  has_many :approved_scopes, :through => :token_scopes, :source => :scope
-  belongs_to :redirect_uri, :class_name => 'RedirectURI'
+  has_many :approved_scopes, through: :token_scopes, source: :scope
+  belongs_to :redirect_uri, class_name: 'RedirectURI'
   belongs_to :user
 
   def set_as_client_credentials
