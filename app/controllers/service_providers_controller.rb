@@ -22,7 +22,7 @@ class ServiceProvidersController < ApplicationController
       @sp.add_user(user)
       @sp.save
     when 'add_scope'
-      scope = Scope.create(service_provider: @sp, name: params[:name])
+      scope = Scope.create(service_provider: @sp, name: params[:name], description: params[:description])
       @sp.scopes << scope
       @sp.save
     end

@@ -3,6 +3,7 @@ class CreateScopes < ActiveRecord::Migration[5.0]
     create_table :scopes do |t|
       t.references :service_provider, foreign_key: true
       t.string :name
+      t.string :description
 
       t.timestamps
 

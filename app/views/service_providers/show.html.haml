@@ -11,14 +11,16 @@
 
 %h2= 'Scopes'
 
-%ul
+%dl
   - @sp.scopes.each do |scope|
-    %li= scope.name
+    %dt= scope.name
+    %dd= scope.description
 
 - if @is_owner
   = form_tag(service_provider_path(@sp), method: :put) do |f|
     = hidden_field_tag(:type, 'add_scope')
     = text_field_tag(:name, '', placeholder: 'name')
+    = text_field_tag(:description, '', placeholder: 'description')
     = submit_tag('Add scope')
 
 %h2= 'Users'
