@@ -60,6 +60,10 @@
               %dt= redirect_uri.uri
               %dd
                 %a{href: "/#{@sp.id}/oauth2/authorize?response_type=code&client_id=#{consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@sp.scopes.map(&:name).join(' ')}&state=teststate"}= 'Test authorization with Authorization Code Grant'
+              %dd
+                %a{href: "/#{@sp.id}/oauth2/token?grant_type=client_credentials&client_id=#{consumer.client_id_key}&client_secret=#{consumer.client_secret}"}= 'Test authorization with Client Credentials Grant'
+              %dd
+                %a{href: "/#{@sp.id}/oauth2/authorize?response_type=token&client_id=#{consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@sp.scopes.map(&:name).join(' ')}&state=teststate"}= 'Test authorization with Implicit Grant'
           = form_tag(service_provider_consumer_path(@sp), method: :put) do |f|
             = hidden_field_tag(:type, 'add_redirect_uri')
             = text_field_tag(:redirect_uri, '', placeholder: 'redirect URI')
