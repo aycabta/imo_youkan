@@ -1,0 +1,10 @@
+%h1= 'authorize'
+
+%ul
+  - @scopes.each do |scope|
+    %li= scope.description
+
+= form_tag(oauth2_authorize_redirect_with_path(@sp), method: :post) do |f|
+  = hidden_field_tag(:client_id, @token.consumer.client_id_key)
+  = hidden_field_tag(:redirect_uri, @token.consumer.redirect_uris.first.uri)
+  = submit_tag('Authorize')

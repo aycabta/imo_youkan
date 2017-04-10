@@ -9,6 +9,8 @@ class OAuth2Controller < ApplicationController
   def authorize
     if params[:response_type] == 'token'
       implicit_token
+    elsif params[:response_type] == 'code'
+      authorization_code
     end
   end
 
@@ -31,6 +33,28 @@ class OAuth2Controller < ApplicationController
       state: params[:state]
     }
     redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+  end
+
+  private def authorization_code
+    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    rejected_scopes = params[:scope].split(' ').select { |given_scope| !consumer.service_provider.scopes.find { |scope| scope.name == given_scope } }
+    unless rejected_scopes.empty?
+      redirect_params = {
+        error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
+      }
+      return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+    end
+    if current_user
+      @token = consumer.tokens.find_or_create_by(grant: 'authorization_code', user: current_user)
+      @token.set_as_authorization_code(params[:scope].split(' '))
+      @token.state = params[:state]
+      @token.save
+      @state = params[:state]
+      @scopes = consumer.service_provider.scopes.select { |s| params[:scope].split(' ').include?(s.name) }
+      render(:authorize)
+    else
+      render(:authorize_login)
+    end
   end
 
   def token

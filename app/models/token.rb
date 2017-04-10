@@ -24,6 +24,14 @@ class Token < ApplicationRecord
     self.save
   end
 
+  def set_as_authorization_code(scopes)
+    self.grant = 'authorization_code'
+    generate_code
+    selected_scopes = self.consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
+    self.approved_scopes = selected_scopes
+    self.save
+  end
+
   def generate_code
     self.code = SecureRandom.urlsafe_base64(64)
   end
