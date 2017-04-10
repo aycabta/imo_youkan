@@ -22,7 +22,7 @@ class OAuth2Controller < ApplicationController
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
     end
     token = consumer.tokens.create
-    token.set_as_implicit
+    token.set_as_implicit(params[:scope].split(' '))
     redirect_params = {
       access_token: token.access_token,
       token_type: 'bearer',

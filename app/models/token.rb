@@ -14,11 +14,13 @@ class Token < ApplicationRecord
     self.save
   end
 
-  def set_as_implicit
+  def set_as_implicit(scopes)
     self.grant = 'implicit'
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
+    selected_scopes = self.consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
+    self.approved_scopes = selected_scopes
     self.save
   end
 
