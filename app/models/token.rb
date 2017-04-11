@@ -15,21 +15,25 @@ class Token < ApplicationRecord
     self.save
   end
 
-  def set_as_implicit(scopes)
+  def set_as_implicit(scopes, state, redirect_uri)
     self.grant = 'implicit'
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
     selected_scopes = self.consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
     self.approved_scopes = selected_scopes
+    self.state = state
+    self.redirect_uri = RedirectURI.find_by(consumer: self.consumer, uri: redirect_uri)
     self.save
   end
 
-  def set_as_authorization_code(scopes)
+  def set_as_authorization_code(scopes, state, redirect_uri)
     self.grant = 'authorization_code'
     generate_code
     selected_scopes = self.consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
     self.approved_scopes = selected_scopes
+    self.state = state
+    self.redirect_uri = RedirectURI.find_by(consumer: self.consumer, uri: redirect_uri)
     self.save
   end
 

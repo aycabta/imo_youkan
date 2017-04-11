@@ -25,10 +25,7 @@ class OAuth2Controller < ApplicationController
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
     end
     token = consumer.tokens.find_or_create_by(grant: 'implicit', user: current_user)
-    token.set_as_implicit(scopes)
-    token.state = params[:state]
-    token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
-    token.save
+    token.set_as_implicit(scopes, params[:state], params[:redirect_uri])
     redirect_to(token.redirect_uri_to_implicit_token)
   end
 
@@ -44,10 +41,7 @@ class OAuth2Controller < ApplicationController
     end
     if current_user
       @token = consumer.tokens.find_or_create_by(grant: 'authorization_code', user: current_user)
-      @token.set_as_authorization_code(scopes)
-      @token.state = params[:state]
-      @token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
-      @token.save
+      @token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
       @scopes = consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
       render(:authorize)
     else
