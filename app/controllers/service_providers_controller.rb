@@ -14,7 +14,7 @@ class ServiceProvidersController < ApplicationController
 
   def update
     @sp = ServiceProvider.find(params[:id])
-    return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user) # FIXME: render forbidden page
+    return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
     case params[:type]
     when 'add_user'
       user = User.find_by(email: params[:email])
