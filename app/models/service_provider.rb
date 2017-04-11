@@ -36,4 +36,8 @@ class ServiceProvider < ApplicationRecord
       sp_user.save
     end
   end
+
+  def unknown_scopes(given_scopes)
+    given_scopes.select { |given_scope| !self.scopes.find { |s| s.name == given_scope } }
+  end
 end

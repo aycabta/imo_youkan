@@ -17,7 +17,7 @@ class OAuth2Controller < ApplicationController
   private def implicit_token
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     scopes = params[:scope].split(' ')
-    rejected_scopes = scopes.select { |given_scope| !consumer.service_provider.scopes.find { |scope| scope.name == given_scope } }
+    rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
     unless rejected_scopes.empty?
       redirect_params = {
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
@@ -35,7 +35,7 @@ class OAuth2Controller < ApplicationController
   private def authorization_code
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     scopes = params[:scope].split(' ')
-    rejected_scopes = scopes.select { |given_scope| !consumer.service_provider.scopes.find { |scope| scope.name == given_scope } }
+    rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
     unless rejected_scopes.empty?
       redirect_params = {
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
