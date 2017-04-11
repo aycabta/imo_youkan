@@ -48,7 +48,6 @@ class OAuth2Controller < ApplicationController
       @token.state = params[:state]
       @token.redirect_uri = RedirectURI.find_by(consumer: consumer, uri: params[:redirect_uri])
       @token.save
-      @state = params[:state]
       @scopes = consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
       render(:authorize)
     else
