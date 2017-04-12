@@ -19,5 +19,4 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym('OAuth2')
   inflect.acronym('URI')
   inflect.acronym('URIs')
-  inflect.irregular('URI', 'URIs')
 end
