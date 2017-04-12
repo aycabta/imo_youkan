@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  user_id: 1
+  client_id_key: MyString1
+  client_secret: MyString1
+
+two:
+  name: MyString
+  user_id: 2
+  client_id_key: MyString2
+  client_secret: MyString2

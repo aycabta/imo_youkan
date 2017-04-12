@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  consumer_id: 1
+  user_id: 1
+  redirect_uri_id: 1
+  expires_in: 2017-03-30 23:50:13
+  grant: authorization_code
+  state: teststate
+  code: afoefe
+  token_type: Bearer
+  access_token: fjeofjeogeogoe
+  refresh_token: fjeojgeougeougoeu
+  expires_in: 2017-03-30 23:50:13
+
+two:
+  consumer_id: 1
+  user_id: 1
+  redirect_uri_id: 1
+  expires_in: 2017-03-30 23:50:13
+  grant: authorization_code
+  state: teststate
+  code: afoefe
+  token_type: Bearer
+  access_token: fjeofjeogeogoefefe
+  refresh_token: fjeojgeougeougoeueeee
+  expires_in: 2017-03-30 23:50:13
