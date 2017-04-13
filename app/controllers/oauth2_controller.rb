@@ -77,8 +77,8 @@ class OAuth2Controller < ApplicationController
   end
 
   private def authorization_code_token
-    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], client_secret: params[:client_secret], redirect_uris: { uri: params[:redirect_uri] })
-    token = consumer.tokens.find_by(grant: 'authorization_code', code: params[:code])
+    consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    token = Token.joins(:redirect_uri).find_by(consumer: consumer, grant: 'authorization_code', code: params[:code], redirect_uris: { uri: params[:redirect_uri] })
     token.set_tokens_for_authorization_code
     render(json: token.authorization_code_token_json)
   end
