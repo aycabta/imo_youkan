@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  test 'User is built by #find_or_create_by_auth' do
+  test 'an user built by #find_or_create_by_auth is valid' do
     user = User.find_or_create_by_auth({
       'provider' => 'testprovider',
       'uid' => '0123abc4567def89',
