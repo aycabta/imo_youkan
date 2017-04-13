@@ -91,7 +91,7 @@ class Token < ApplicationRecord
       access_token: self.access_token,
       token_type: self.token_type,
       refresh_token: self.refresh_token,
-      scope: self.token.approved_scopes.map { |s| s.name }.join(' ')
+      scope: self.approved_scopes.map { |s| s.name }.join(' ')
     }
   end
 end
