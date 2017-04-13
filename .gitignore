@@ -23,3 +23,5 @@
 *.swp
 
 config/secrets.yml
+
+db/schema.rb
