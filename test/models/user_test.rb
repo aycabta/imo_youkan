@@ -12,7 +12,7 @@ class UserTest < ActiveSupport::TestCase
         'image' => 'http://hogehoge.com/image.png'
       }
     })
-    refute_nil(user)
+    assert_not_nil(user)
     assert_kind_of(String, user.name)
   end
 end
