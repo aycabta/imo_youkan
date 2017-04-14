@@ -10,6 +10,7 @@ class Consumer < ApplicationRecord
 
   validates :client_id_key, uniqueness: true
   validates :client_secret, uniqueness: true
+  validates :user_id, presence: true
 
   private def generate_client_key_and_secret
     self.client_id_key = "#{self.id}_#{SecureRandom.urlsafe_base64(16)}"
