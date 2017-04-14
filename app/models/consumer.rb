@@ -8,6 +8,9 @@ class Consumer < ApplicationRecord
 
   after_commit :generate_client_key_and_secret, unless: :client_id_key?
 
+  validates :client_id_key, uniqueness: true
+  validates :client_secret, uniqueness: true
+
   private def generate_client_key_and_secret
     self.client_id_key = "#{self.id}_#{SecureRandom.urlsafe_base64(16)}"
     self.client_secret = SecureRandom.urlsafe_base64(32)

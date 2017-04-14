@@ -3,6 +3,10 @@ class User < ApplicationRecord
   has_many :service_providers, through: :service_provider_users
   has_many :consumers
 
+  validates :uid, uniqueness: true, allow_nil: true
+  validates :nickname, uniqueness: true, allow_nil: true
+  validates :email, uniqueness: true, allow_nil: true
+
   def self.find_or_create_by_auth(auth)
     user = User.find_or_create_by(provider: auth['provider'], uid: auth['uid'])
 
