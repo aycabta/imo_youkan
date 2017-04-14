@@ -16,4 +16,8 @@ class Consumer < ApplicationRecord
     self.client_secret = SecureRandom.urlsafe_base64(32)
     self.save
   end
+
+  def token(user, grant)
+    self.tokens.find_by(grant: grant, user: user)
+  end
 end

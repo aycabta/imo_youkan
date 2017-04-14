@@ -65,7 +65,7 @@
         %dt= 'test authorization links'
         %dd
           %a{href: "/#{@sp.id}/oauth2/token?grant_type=client_credentials&client_id=#{consumer.client_id_key}&client_secret=#{consumer.client_secret}"}= "Client Credentials"
-        - if token = Token.find_by(consumer: consumer, grant: 'authorization_code', user: current_user)
+        - if token = consumer.token(current_user, 'authorization_code')
           %dd
             %a{href: "/#{@sp.id}/oauth2/token?grant_type=authorization_code&client_id=#{consumer.client_id_key}&client_secret=#{consumer.client_secret}&redirect_uri=#{token.redirect_uri.uri}&code=#{token.code}&state=teststate"}
               access token for Authorization Code of
