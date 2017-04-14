@@ -63,7 +63,8 @@
             = text_field_tag(:redirect_uri, '', placeholder: 'redirect URI')
             = submit_tag('Add redirect URI')
         - if ENV['RAILS_ENV'] == 'development'
-          %dt= 'test authorization links'
+          %dt
+            %strong= 'test authorization links for development'
           %dd
             %a{href: "/#{@sp.id}/oauth2/token?grant_type=client_credentials&client_id=#{consumer.client_id_key}&client_secret=#{consumer.client_secret}"}= "Client Credentials"
           - if token = consumer.token(current_user, 'authorization_code')
