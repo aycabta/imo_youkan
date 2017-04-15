@@ -7,8 +7,8 @@ class Token < ApplicationRecord
   belongs_to :redirect_uri, class_name: 'RedirectURI', optional: true
   belongs_to :user, optional: true
 
-  validates :consumer_id, uniqueness: { scope: [:access_token] }, allow_nil: true
-  validates :consumer_id, uniqueness: { scope: [:refresh_token] }, allow_nil: true
+  validates :access_token, uniqueness: { scope: [:consumer_id] }, allow_nil: true
+  validates :refresh_token, uniqueness: { scope: [:consumer_id] }, allow_nil: true
   validates :grant, inclusion: { in: %w(authorization_code implicit client_credentials) }
 
   def set_as_client_credentials
