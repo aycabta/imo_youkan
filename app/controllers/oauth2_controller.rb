@@ -69,6 +69,15 @@ class OAuth2Controller < ApplicationController
     end
   end
 
+  def revoke
+    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { uri: client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    if token
+      token.access_token = nil
+      token.save
+    end
+    render(json: {})
+  end
+
   private def client_credentials_token
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = consumer.tokens.create
