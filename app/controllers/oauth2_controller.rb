@@ -70,7 +70,7 @@ class OAuth2Controller < ApplicationController
   end
 
   def revoke
-    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { uri: client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
       token.access_token = nil
       token.save
@@ -79,7 +79,7 @@ class OAuth2Controller < ApplicationController
   end
 
   def introspect
-    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { uri: client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
       if token.expires_in <= Time.now
         # TODO scope and others (username, email, redirect_uri, ...)
