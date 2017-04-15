@@ -7,7 +7,7 @@ class ServiceProvidersController < ApplicationController
   end
 
   def create
-    @sp = ServiceProvider.create(service_provider_params)
+    @sp = ServiceProvider.create!(service_provider_params)
     @sp.add_user_as_owner(current_user)
     redirect_to(service_provider_path(@sp))
   end
@@ -22,7 +22,7 @@ class ServiceProvidersController < ApplicationController
       @sp.add_user(user)
       @sp.save!
     when 'add_scope'
-      scope = Scope.create(service_provider: @sp, name: params[:name], description: params[:description])
+      scope = Scope.create!(service_provider: @sp, name: params[:name], description: params[:description])
       @sp.scopes << scope
       @sp.save!
     end
