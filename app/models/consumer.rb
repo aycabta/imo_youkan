@@ -8,6 +8,7 @@ class Consumer < ApplicationRecord
 
   after_commit :generate_client_key_and_secret, unless: :client_id_key?
 
+  validates :name, presence: true
   validates :client_id_key, uniqueness: true
   validates :client_secret, uniqueness: true
   validates :user_id, presence: true
