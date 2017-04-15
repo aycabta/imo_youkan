@@ -81,7 +81,7 @@ class OAuth2Controller < ApplicationController
   def introspect
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
-      if token.expires_in <= Time.now
+      if token.expires_in >= Time.now
         # TODO scope and others (username, email, redirect_uri, ...)
         render(json: { active: true })
       else
