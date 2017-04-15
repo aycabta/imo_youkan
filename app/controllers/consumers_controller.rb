@@ -18,6 +18,9 @@ class ConsumersController < ApplicationController
   end
 
   def show
-    @consumer = Consumer.includes(:owner).find_by(id: params[:id], service_provider_id: params[:service_provider_id], users: { id: current_user.id })
+    @consumer = Consumer.includes(:owner).find_by(id: params[:id], service_provider_id: params[:service_provider_id])
+    unless @consumer.owner == current_user
+      redirect_to(service_provider_path(@consumer.service_provider))
+    end
   end
 end
