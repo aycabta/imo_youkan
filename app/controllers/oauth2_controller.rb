@@ -78,6 +78,20 @@ class OAuth2Controller < ApplicationController
     render(json: {})
   end
 
+  def introspect
+    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { uri: client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    if token
+      if token.expires_in <= Time.now
+        # TODO scope and others (username, email, redirect_uri, ...)
+        render(json: { active: true })
+      else
+        render(json: { active: false })
+      end
+    else
+      render(json: { active: false })
+    end
+  end
+
   private def client_credentials_token
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = consumer.tokens.create
