@@ -20,11 +20,11 @@ class ServiceProvidersController < ApplicationController
       user = User.find_by(email: params[:email])
       return redirect_to(service_provider_path(@sp)) unless user
       @sp.add_user(user)
-      @sp.save
+      @sp.save!
     when 'add_scope'
       scope = Scope.create(service_provider: @sp, name: params[:name], description: params[:description])
       @sp.scopes << scope
-      @sp.save
+      @sp.save!
     end
     redirect_to(service_provider_path(@sp))
   end

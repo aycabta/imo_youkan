@@ -15,7 +15,7 @@ class Consumer < ApplicationRecord
   private def generate_client_key_and_secret
     self.client_id_key = "#{self.id}_#{SecureRandom.urlsafe_base64(16)}"
     self.client_secret = SecureRandom.urlsafe_base64(32)
-    self.save
+    self.save!
   end
 
   def token(user, grant)

@@ -15,7 +15,7 @@ class User < ApplicationRecord
     user.name = auth['info']['name']
     user.image_url = auth['info']['image']
 
-    user.save
+    user.save!
     user
   end
 end

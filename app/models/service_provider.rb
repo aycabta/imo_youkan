@@ -23,7 +23,7 @@ class ServiceProvider < ApplicationRecord
       sp_user.service_provider = self
       sp_user.user = user
       sp_user.is_owner = false
-      sp_user.save
+      sp_user.save!
     end
   end
 
@@ -33,7 +33,7 @@ class ServiceProvider < ApplicationRecord
       sp_user.service_provider = self
       sp_user.user = user
       sp_user.is_owner = true
-      sp_user.save
+      sp_user.save!
     end
   end
 

@@ -16,7 +16,7 @@ class Token < ApplicationRecord
     generate_access_token
     self.token_type = 'Bearer'
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
-    self.save
+    self.save!
   end
 
   def set_as_implicit(scopes, state, redirect_uri)
@@ -28,7 +28,7 @@ class Token < ApplicationRecord
     self.approved_scopes = selected_scopes
     self.state = state
     self.redirect_uri = RedirectURI.find_by(consumer: self.consumer, uri: redirect_uri)
-    self.save
+    self.save!
   end
 
   def set_as_authorization_code(scopes, state, redirect_uri)
@@ -38,14 +38,14 @@ class Token < ApplicationRecord
     self.approved_scopes = selected_scopes
     self.state = state
     self.redirect_uri = RedirectURI.find_by(consumer: self.consumer, uri: redirect_uri)
-    self.save
+    self.save!
   end
 
   def set_tokens_for_authorization_code
     self.generate_access_token
     self.generate_refresh_token
     self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
-    self.save
+    self.save!
   end
 
   def generate_code
