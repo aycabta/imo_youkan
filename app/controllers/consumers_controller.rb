@@ -1,5 +1,5 @@
 class ConsumersController < ApplicationController
-  before_action :authorize!, only: [:create, :update]
+  before_action :authorize!, only: [:create, :update, :show]
 
   def create
     @sp = ServiceProvider.includes(:users).find_by(id: params[:service_provider_id], users: { id: current_user.id })
@@ -15,5 +15,9 @@ class ConsumersController < ApplicationController
       consumer.redirect_uris.create(uri: params[:redirect_uri])
       redirect_to(service_provider_path(@sp))
     end
+  end
+
+  def show
+    @consumer = Consumer.includes(:owner).find_by(id: params[:id], service_provider_id: params[:service_provider_id], users: { id: current_user.id })
   end
 end

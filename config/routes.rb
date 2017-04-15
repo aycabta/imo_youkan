@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root 'service_providers#index'
   resources :service_providers, only: [:create, :show, :update] do
-    resources :consumers, only: [:index, :create, :update]
+    resources :consumers, only: [:index, :create, :update, :show]
   end
   match '/:service_provider_id/oauth2/token', to: 'oauth2#token', as: 'oauth2_token', via: [:get, :post]
   get '/:service_provider_id/oauth2/authorize', to: 'oauth2#authorize', as: 'oauth2_authorize'

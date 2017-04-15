@@ -1,0 +1,39 @@
+%h1= 'Consumer'
+
+%h2= @consumer.name
+
+%dl
+  %dt= 'client_id'
+  %dd= @consumer.client_id_key
+  %dt= 'client_secret'
+  %dd= @consumer.client_secret
+  %dt= 'redirect URIs'
+  %dd
+    %dl
+      - @consumer.redirect_uris.each do |redirect_uri|
+        %dt= redirect_uri.uri
+    = form_tag(service_provider_consumer_path(@consumer.service_provider), method: :put) do |f|
+      = hidden_field_tag(:type, 'add_redirect_uri')
+      = text_field_tag(:redirect_uri, '', placeholder: 'redirect URI')
+      = submit_tag('Add redirect URI')
+  - if ENV['RAILS_ENV'] == 'development'
+    %dt
+      %strong= 'test authorization links for development'
+    %dd
+      %a{href: "/#{@consumer.service_provider.id}/oauth2/token?grant_type=client_credentials&client_id=#{@consumer.client_id_key}&client_secret=#{@consumer.client_secret}"}= "Client Credentials"
+    - if token = @consumer.token(current_user, 'authorization_code')
+      %dd
+        %a{href: "/#{@consumer.service_provider.id}/oauth2/token?grant_type=authorization_code&client_id=#{@consumer.client_id_key}&client_secret=#{@consumer.client_secret}&redirect_uri=#{token.redirect_uri.uri}&code=#{token.code}&state=teststate"}
+          access token for Authorization Code of
+          %em= token.code
+          with
+          %em= token.redirect_uri.uri
+    %dd
+      %dl
+        - @consumer.redirect_uris.each do |redirect_uri|
+          %dt= redirect_uri.uri
+          %dd
+            %a{href: "/#{@consumer.service_provider.id}/oauth2/authorize?response_type=code&client_id=#{@consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@consumer.service_provider.scopes.map(&:name).join(' ')}&state=teststate"}= "Authorization Code Grant"
+          %dd
+            %a{href: "/#{@consumer.service_provider.id}/oauth2/authorize?response_type=token&client_id=#{@consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@consumer.service_provider.scopes.map(&:name).join(' ')}&state=teststate"}= "Implicit Grant"
+
