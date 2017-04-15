@@ -1,5 +1,5 @@
 class ConsumersController < ApplicationController
-  before_action :authorize!, only: [:create]
+  before_action :authorize!, only: [:create, :update]
 
   def create
     @sp = ServiceProvider.includes(:users).find_by(id: params[:service_provider_id], users: { id: current_user.id })
