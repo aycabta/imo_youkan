@@ -46,9 +46,13 @@ class OAuth2Controller < ApplicationController
     end
     if current_user
       @token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
-      @token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
-      @scopes = consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
-      render(:authorize)
+      if @token.code.nil?
+        @token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
+        @scopes = consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
+        render(:authorize)
+      else
+        redirect_to(@token.redirect_uri_to_authorize_redirect_with_code)
+      end
     else
       session[:continued_url] = request.url
       render(:authorize_login)
