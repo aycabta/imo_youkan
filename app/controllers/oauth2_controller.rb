@@ -36,8 +36,8 @@ class OAuth2Controller < ApplicationController
 
   private def authorization_code
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
-    scopes = params[:scope].split(' ')
-    rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
+    splited_scopes = params[:scope].split(' ')
+    rejected_scopes = consumer.service_provider.unknown_scopes(splited_scopes)
     unless rejected_scopes.empty?
       redirect_params = {
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
@@ -45,13 +45,12 @@ class OAuth2Controller < ApplicationController
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
     end
     if current_user
-      @token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
-      if @token.code.nil?
-        @token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
-        @scopes = consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
+      @scopes = consumer.service_provider.scopes.select { |s| splited_scopes.include?(s.name) }
+      token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
+      if token.nil? || token.code.nil?
         render(:authorize)
       else
-        redirect_to(@token.redirect_uri_to_authorize_redirect_with_code)
+        redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
       end
     else
       session[:continued_url] = request.url
@@ -61,7 +60,12 @@ class OAuth2Controller < ApplicationController
 
   def authorize_redirect_with_code
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
-    token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
+    token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
+    if token.code.nil?
+      splited_scopes = params[:scope].split(' ')
+      scopes = consumer.service_provider.scopes.select { |s| splited_scopes.include?(s.name) }
+      token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
+    end
     redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
   end
 
