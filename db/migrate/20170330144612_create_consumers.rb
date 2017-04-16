@@ -10,6 +10,7 @@ class CreateConsumers < ActiveRecord::Migration[5.0]
 
       t.timestamps
 
+      t.index :name, unique: true
       t.index :client_id_key, unique: true
       t.index :client_secret, unique: true
     end

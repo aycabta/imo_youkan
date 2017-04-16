@@ -5,6 +5,8 @@ class CreateRedirectURIs < ActiveRecord::Migration[5.0]
       t.string :uri
 
       t.timestamps
+
+      t.index [:consumer_id, :uri], unique: true
     end
   end
 end
