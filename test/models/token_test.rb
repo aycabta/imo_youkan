@@ -19,8 +19,7 @@ class TokenTest < ActiveSupport::TestCase
     scopes.each { |name| sp.scopes.create!(name: name) }
     consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
     consumer.redirect_uris.create!(uri: redirect_uri)
-    token = Token.create!(grant: 'implicit', consumer: consumer)
-    token.save
+    token = Token.new(consumer: consumer)
     token.set_as_implicit(scopes, 'teststate', redirect_uri)
     assert_equal(token.grant, 'implicit')
     assert_not_nil(token.access_token)
