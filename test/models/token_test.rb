@@ -2,7 +2,9 @@ require 'test_helper'
 
 class TokenTest < ActiveSupport::TestCase
   test '#set_as_client_credentials is well-behaved' do
-    token = Token.new(consumer: Consumer.new)
+    sp = ServiceProvider.create!(name: 'a web service')
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    token = Token.new(consumer: consumer)
     token.set_as_client_credentials
     assert_equal(token.grant, 'client_credentials')
     assert_not_nil(token.access_token)
