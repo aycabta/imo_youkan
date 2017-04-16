@@ -7,7 +7,7 @@ class CreateScopes < ActiveRecord::Migration[5.0]
 
       t.timestamps
 
-      t.index :name, unique: true
+      t.index [:service_provider_id, :name], unique: true
     end
   end
 end
