@@ -13,7 +13,7 @@ class ConsumersController < ApplicationController
     case params[:type]
     when 'add_redirect_uri'
       consumer.redirect_uris.create!(uri: params[:redirect_uri])
-      redirect_to(service_provider_path(@sp))
+      redirect_to(service_provider_consumer_path(@sp, consumer))
     end
   end
 
