@@ -20,10 +20,10 @@
     %dt
       %strong= 'test authorization links for development'
     %dd
-      %a{href: "/#{@consumer.service_provider.id}/oauth2/token?grant_type=client_credentials&client_id=#{@consumer.client_id_key}&client_secret=#{@consumer.client_secret}"}= "Client Credentials"
+      %a{href: @consumer.client_credentials_path}= "Client Credentials"
     - if token = @consumer.token(current_user, 'authorization_code')
       %dd
-        %a{href: "/#{@consumer.service_provider.id}/oauth2/token?grant_type=authorization_code&client_id=#{@consumer.client_id_key}&client_secret=#{@consumer.client_secret}&redirect_uri=#{token.redirect_uri.uri}&code=#{token.code}&state=teststate"}
+        %a{href: @consumer.token_by_authorization_code_path(token)}
           access token for Authorization Code of
           %em= token.code
           with
@@ -33,7 +33,7 @@
         - @consumer.redirect_uris.each do |redirect_uri|
           %dt= redirect_uri.uri
           %dd
-            %a{href: "/#{@consumer.service_provider.id}/oauth2/authorize?response_type=code&client_id=#{@consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@consumer.service_provider.scopes.map(&:name).join(' ')}&state=teststate"}= "Authorization Code Grant"
+            %a{href: @consumer.authorization_code_path(redirect_uri: redirect_uri, state: 'teststate')}= "Authorization Code Grant"
           %dd
-            %a{href: "/#{@consumer.service_provider.id}/oauth2/authorize?response_type=token&client_id=#{@consumer.client_id_key}&redirect_uri=#{redirect_uri.uri}&scope=#{@consumer.service_provider.scopes.map(&:name).join(' ')}&state=teststate"}= "Implicit Grant"
+            %a{href: @consumer.implicit_path(redirect_uri: redirect_uri, state: 'teststate')}= "Implicit Grant"
 
