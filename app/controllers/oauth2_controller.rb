@@ -69,14 +69,6 @@ class OAuth2Controller < ApplicationController
     redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
   end
 
-  def token
-    if params[:grant_type] == 'client_credentials'
-      client_credentials_token
-    elsif params[:grant_type] == 'authorization_code'
-      authorization_code_token
-    end
-  end
-
   def revoke
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
@@ -97,6 +89,14 @@ class OAuth2Controller < ApplicationController
       end
     else
       render(json: { active: false })
+    end
+  end
+
+  def token
+    if params[:grant_type] == 'client_credentials'
+      client_credentials_token
+    elsif params[:grant_type] == 'authorization_code'
+      authorization_code_token
     end
   end
 
