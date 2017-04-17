@@ -10,4 +10,14 @@ class ServiceProviderTest < ActiveSupport::TestCase
     assert_equal(1, sp.reload.users.size)
     assert_equal(1, sp.reload.owners.size)
   end
+
+  test '#add_owner is well-behaved' do
+    sp = ServiceProvider.create!(name: 'a web service')
+    assert_equal(0, sp.users.size)
+    assert_equal(0, sp.owners.size)
+    sp.add_user(User.create!(name: 'a user'))
+    sp.reload
+    assert_equal(1, sp.reload.users.size)
+    assert_equal(0, sp.reload.owners.size)
+  end
 end
