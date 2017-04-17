@@ -124,4 +124,19 @@ class TokenTest < ActiveSupport::TestCase
     end
     assert_equal(token.redirect_uri.uri, redirect_uri)
   end
+
+  test '#set_tokens_for_authorization_code without code is ill-behaved' do
+    scopes = %w(basic profile data)
+    redirect_uri = 'http://foo.com/'
+    state = 'teststate'
+    sp = ServiceProvider.create!(name: 'a web service')
+    scopes.each { |name| sp.scopes.create!(name: name) }
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer.redirect_uris.create!(uri: redirect_uri)
+    token = Token.new(consumer: consumer)
+    token.grant = 'authorization_code'
+    assert_raise ActiveRecord::RecordInvalid do
+      token.set_tokens_for_authorization_code
+    end
+  end
 end
