@@ -16,7 +16,7 @@ class ServiceProvider < ApplicationRecord
   end
 
   def consumers_by_user(user)
-    Consumer.includes(:service_provider).where(service_provider: self, owner: user)
+    Consumer.where(service_provider: self, owner: user)
   end
 
   def add_user(user)
