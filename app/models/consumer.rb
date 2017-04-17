@@ -39,6 +39,10 @@ class Consumer < ApplicationRecord
     "/#{self.service_provider.id}/oauth2/token?grant_type=authorization_code&client_id=#{self.client_id_key}&client_secret=#{self.client_secret}&redirect_uri=#{token.redirect_uri.uri}&code=#{token.code}"
   end
 
+  def refresh_token_path(token)
+    "/#{self.service_provider.id}/oauth2/token?grant_type=refresh_token&client_id=#{self.client_id_key}&client_secret=#{self.client_secret}&refresh_token=#{token.refresh_token}"
+  end
+
   private def build_scope_string(scopes)
     if scopes
       scopes.map { |s|

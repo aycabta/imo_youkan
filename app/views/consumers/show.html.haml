@@ -28,6 +28,11 @@
           %em= token.code
           with
           %em= token.redirect_uri.uri
+      - if token.refresh_token
+        %dd
+          %a{href: @consumer.refresh_token_path(token)}
+            refresh token for Authorization Code of
+            %em= token.refresh_token
     %dd
       %dl
         - @consumer.redirect_uris.each do |redirect_uri|
