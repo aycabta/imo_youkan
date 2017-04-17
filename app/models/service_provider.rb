@@ -8,11 +8,11 @@ class ServiceProvider < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
   def owner?(user)
-    ServiceProvider.includes(:service_provider_users).exists?(id: self.id, service_provider_users: { is_owner: true, user: user })
+    ServiceProviderUser.exists?(service_provider: self, user: user, is_owner: true)
   end
 
   def user_belongs?(user)
-    ServiceProvider.includes(:service_provider_users).exists?(id: self.id, service_provider_users: { user: user })
+    ServiceProviderUser.exists?(service_provider: self, user: user)
   end
 
   def consumers_by_user(user)
@@ -21,21 +21,13 @@ class ServiceProvider < ApplicationRecord
 
   def add_user(user)
     unless user_belongs?(user)
-      sp_user = ServiceProviderUser.new
-      sp_user.service_provider = self
-      sp_user.user = user
-      sp_user.is_owner = false
-      sp_user.save!
+      self.service_provider_users.create!(user: user, is_owner: false)
     end
   end
 
   def add_user_as_owner(user)
     unless user_belongs?(user)
-      sp_user = ServiceProviderUser.new
-      sp_user.service_provider = self
-      sp_user.user = user
-      sp_user.is_owner = true
-      sp_user.save!
+      self.service_provider_users.create!(user: user, is_owner: true)
     end
   end
 
