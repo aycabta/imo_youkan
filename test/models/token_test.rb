@@ -3,7 +3,7 @@ require 'test_helper'
 class TokenTest < ActiveSupport::TestCase
   test '#set_as_client_credentials is well-behaved' do
     sp = ServiceProvider.create!(name: 'a web service')
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     token = Token.new(consumer: consumer)
     token.set_as_client_credentials
     assert_equal(token.grant, 'client_credentials')
@@ -18,7 +18,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.set_as_implicit(scopes, state, redirect_uri)
@@ -40,7 +40,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.set_as_implicit(partial_scopes, state, redirect_uri)
@@ -62,7 +62,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.set_as_authorization_code(scopes, state, redirect_uri)
@@ -85,7 +85,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.set_as_authorization_code(partial_scopes, state, redirect_uri)
@@ -108,7 +108,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.set_as_authorization_code(scopes, state, redirect_uri)
@@ -131,7 +131,7 @@ class TokenTest < ActiveSupport::TestCase
     state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
-    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
     token.grant = 'authorization_code'
