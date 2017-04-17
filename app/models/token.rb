@@ -10,6 +10,10 @@ class Token < ApplicationRecord
   validates :access_token, uniqueness: { scope: [:consumer_id] }, allow_nil: true
   validates :refresh_token, uniqueness: { scope: [:consumer_id] }, allow_nil: true
   validates :grant, inclusion: { in: %w(authorization_code implicit client_credentials) }
+  validates :access_token, absence: {
+    if: -> (t) { t.grant == 'authorization_code' && t.code.nil? },
+    message: 'must be blank without code on Authorization Code'
+  }
 
   def set_as_client_credentials
     self.grant = 'client_credentials'
