@@ -97,6 +97,8 @@ class OAuth2Controller < ApplicationController
       client_credentials_token
     elsif params[:grant_type] == 'authorization_code'
       authorization_code_token
+    elsif params[:grant_type] == 'refresh_token'
+      refresh_token
     end
   end
 
@@ -112,5 +114,13 @@ class OAuth2Controller < ApplicationController
     token = Token.joins(:redirect_uri).find_by(consumer: consumer, grant: 'authorization_code', code: params[:code], redirect_uris: { uri: params[:redirect_uri] })
     token.set_tokens_for_authorization_code
     render(json: token.authorization_code_token_json)
+  end
+
+  private def refresh_token
+    consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    token = Token.find_by(consumer: consumer, grant: 'authorization_code', refresh_token: params[:refresh_token])
+    token.set_refreshed_access_token
+    puts token.refresh_token_json
+    render(json: token.refresh_token_json)
   end
 end

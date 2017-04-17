@@ -52,6 +52,12 @@ class Token < ApplicationRecord
     self.save!
   end
 
+  def set_refreshed_access_token
+    self.generate_access_token
+    self.expires_in = Time.now.since(self.consumer.seconds_to_expire.seconds)
+    self.save!
+  end
+
   def generate_code
     self.code = SecureRandom.urlsafe_base64(64)
   end
@@ -93,6 +99,17 @@ class Token < ApplicationRecord
   end
 
   def authorization_code_token_json
+    {
+      expires_in: self.consumer.seconds_to_expire,
+      status: 'success',
+      access_token: self.access_token,
+      token_type: self.token_type,
+      refresh_token: self.refresh_token,
+      scope: self.approved_scopes.map { |s| s.name }.join(' ')
+    }
+  end
+
+  def refresh_token_json
     {
       expires_in: self.consumer.seconds_to_expire,
       status: 'success',
