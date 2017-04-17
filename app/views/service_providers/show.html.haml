@@ -26,15 +26,21 @@
 %h2= 'Users'
 
 %ul
-  - @sp.users.all.each do |user|
+  - @sp.service_provider_users.each do |sp_user|
     %li
       %dl
         %dt= 'name'
-        %dd= user.name
+        %dd<
+          = sp_user.user.name
+          - if sp_user.is_owner
+            %span<> &ensp;
+            = '('
+            %strong<>= 'owner'
+            = ')'
         %dt= 'nickname'
-        %dd= user.nickname
+        %dd= sp_user.user.nickname
         %dt= 'email'
-        %dd= user.email
+        %dd= sp_user.user.email
 
 - if @is_owner
   = form_tag(service_provider_path(@sp), method: :put) do |f|
