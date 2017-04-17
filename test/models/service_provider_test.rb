@@ -31,4 +31,17 @@ class ServiceProviderTest < ActiveSupport::TestCase
     assert_not(sp.owner?(user))
     assert(sp.owner?(owner))
   end
+
+  test '#user_belongs? is well-behaved' do
+    sp = ServiceProvider.create!(name: 'a web service')
+    sp_2nd = ServiceProvider.create!(name: 'second service')
+    user = User.create!(name: 'a user')
+    user_2nd = User.create!(name: 'secound user')
+    sp.add_user(user)
+    sp_2nd.add_user(user_2nd)
+    sp.reload
+    sp_2nd.reload
+    assert(sp.user_belongs?(user))
+    assert_not(sp.user_belongs?(user_2nd))
+  end
 end
