@@ -15,13 +15,15 @@ class TokenTest < ActiveSupport::TestCase
   test '#set_as_implicit is well-behaved' do
     scopes = %w(basic profile data)
     redirect_uri = 'http://foo.com/'
+    state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
     consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
-    token.set_as_implicit(scopes, 'teststate', redirect_uri)
+    token.set_as_implicit(scopes, state, redirect_uri)
     assert_equal(token.grant, 'implicit')
+    assert_equal(token.state, state)
     assert_not_nil(token.access_token)
     assert_kind_of(String, token.access_token)
     assert_nil(token.refresh_token)
@@ -35,13 +37,15 @@ class TokenTest < ActiveSupport::TestCase
     scopes = %w(basic profile data post)
     partial_scopes = scopes[0, 2]
     redirect_uri = 'http://foo.com/'
+    state = 'teststate'
     sp = ServiceProvider.create!(name: 'a web service')
     scopes.each { |name| sp.scopes.create!(name: name) }
     consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create)
     consumer.redirect_uris.create!(uri: redirect_uri)
     token = Token.new(consumer: consumer)
-    token.set_as_implicit(partial_scopes, 'teststate', redirect_uri)
+    token.set_as_implicit(partial_scopes, state, redirect_uri)
     assert_equal(token.grant, 'implicit')
+    assert_equal(token.state, state)
     assert_not_nil(token.access_token)
     assert_kind_of(String, token.access_token)
     assert_nil(token.refresh_token)
