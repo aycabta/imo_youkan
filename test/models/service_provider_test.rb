@@ -44,4 +44,19 @@ class ServiceProviderTest < ActiveSupport::TestCase
     assert(sp.user_belongs?(user))
     assert_not(sp.user_belongs?(user_2nd))
   end
+
+  test '#consumers_by_user is well-behaved' do
+    sp = ServiceProvider.create!(name: 'a web service')
+    user = User.create!(name: 'a user')
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: user)
+    Consumer.create!(name: '2nd consumer', service_provider: sp, owner: user)
+    Consumer.create!(name: '3rd consumer', service_provider: sp, owner: User.create!(name: '2nd user'))
+    consumers = sp.consumers_by_user(user)
+    assert_equal(2, consumers.size)
+    consumer_names = ['a consumer', '2nd consumer']
+    consumers.each do |consumer|
+      assert_not_nil(consumer_names.delete(consumer.name))
+    end
+    assert_empty(consumer_names)
+  end
 end
