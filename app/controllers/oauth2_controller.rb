@@ -1,9 +1,23 @@
 class OAuth2Controller < ApplicationController
   protect_from_forgery with: :null_session
   before_action :get_service_provider
+  before_action :check_content_type, only: [:token, :authorize, :revoke, :introspect]
 
   private def get_service_provider
     @sp = ServiceProvider.find(params[:service_provider_id])
+  end
+
+  private def check_content_type
+    unless request.content_type == 'application/x-www-form-urlencoded'
+      render(json: {
+        error: 'invalid_request',
+        error_description: 'Request header validation failed.',
+        error_details: {
+          content_type: "#{request.content_type} is invalid"
+        },
+        status: 'error'
+      })
+    end
   end
 
   def authorize
