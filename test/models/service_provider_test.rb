@@ -59,4 +59,22 @@ class ServiceProviderTest < ActiveSupport::TestCase
     end
     assert_empty(consumer_names)
   end
+
+  test '#unknown_scopes is well-behaved' do
+    scopes = %w(basic profile data, post, comment)
+    unknown_scopes = %w(dummy unidentified)
+    redirect_uri = 'http://foo.com/'
+    state = 'teststate'
+    sp = ServiceProvider.create!(name: 'a web service')
+    scopes.each { |name| sp.scopes.create!(name: name) }
+    consumer = Consumer.create!(name: 'a consumer', service_provider: sp, owner: User.create!)
+    consumer.redirect_uris.create!(uri: redirect_uri)
+    token = Token.new(consumer: consumer)
+    result = sp.unknown_scopes(scopes)
+    assert_empty(result)
+    result = sp.unknown_scopes(scopes[0, 2])
+    assert_empty(result)
+    result = sp.unknown_scopes(scopes[0, 2].concat(unknown_scopes))
+    assert_equal(unknown_scopes, result)
+  end
 end
