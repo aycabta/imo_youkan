@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
-  test 'should get root without login' do
+  test 'should get root without session' do
     get(root_path)
     assert_response(:success)
     assert_nil(assigns(:sps))
