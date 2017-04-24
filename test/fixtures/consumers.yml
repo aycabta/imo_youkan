@@ -1,5 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# TODO use #generate_client_key_and_secret via after_commit when test for client_*
+
 one:
   name: MyString
   user_id: one
