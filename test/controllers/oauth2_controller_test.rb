@@ -29,4 +29,19 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal('invalid_request', json['error'])
     assert_equal('unknown_type is unknown', json['error_description'])
   end
+
+  test 'should get /oauth2/token for implicit' do
+    headers = { CONTENT_TYPE: 'application/x-www-form-urlencoded' }
+    sp = ServiceProvider.first
+    consumer = sp.consumers.first
+    consumer.run_callbacks(:commit)
+    params = {
+      response_type: 'token',
+      client_id: consumer.client_id_key,
+      redirect_uri: consumer.redirect_uris.first.uri,
+      scope: sp.scopes.join(' ')
+    }
+    get(oauth2_authorize_path(sp.id), headers: headers, params: params)
+    assert_response(:success)
+  end
 end
