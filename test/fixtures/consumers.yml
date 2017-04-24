@@ -2,12 +2,14 @@
 
 one:
   name: MyString
-  user_id: 1
+  user_id: one
+  service_provider: one
   client_id_key: MyString1
   client_secret: MyString1
 
 two:
   name: MyString
-  user_id: 2
+  user_id: two
+  service_provider: two
   client_id_key: MyString2
   client_secret: MyString2

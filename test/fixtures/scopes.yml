@@ -1,7 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  service_provider: one
   name: MyString1
 
 two:
+  service_provider: one
   name: MyString2
