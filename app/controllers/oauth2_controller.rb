@@ -26,6 +26,12 @@ class OAuth2Controller < ApplicationController
       implicit_token
     elsif params[:response_type] == 'code'
       authorization_code
+    elsif params[:response_type].nil?
+      json = {
+        error: 'invalid_request',
+        error_description: 'response_type is required'
+      }
+      render(status: :bad_request, json: json)
     end
   end
 
