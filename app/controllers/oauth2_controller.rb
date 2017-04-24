@@ -42,6 +42,7 @@ class OAuth2Controller < ApplicationController
   end
 
   private def implicit_token
+    # TODO checks each params separately and returns error
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     scopes = params[:scope].split(' ')
     rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
