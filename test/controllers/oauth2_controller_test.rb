@@ -43,5 +43,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     }
     get(oauth2_authorize_path(sp.id), headers: headers, params: params)
     assert_response(:success)
+    assert_template(:authorize_login)
   end
 end
