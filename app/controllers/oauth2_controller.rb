@@ -9,14 +9,15 @@ class OAuth2Controller < ApplicationController
 
   private def check_content_type
     unless request.content_type == 'application/x-www-form-urlencoded'
-      render(json: {
+      json = {
         error: 'invalid_request',
         error_description: 'Request header validation failed.',
         error_details: {
           content_type: "#{request.content_type} is invalid"
         },
         status: 'error'
-      })
+      }
+      render(json: json, status: :bad_request)
     end
   end
 
