@@ -30,7 +30,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal('unknown_type is unknown', json['error_description'])
   end
 
-  test 'should get /oauth2/token for implicit' do
+  test 'should get /oauth2/token for implicit without session' do
     headers = { CONTENT_TYPE: 'application/x-www-form-urlencoded' }
     sp = ServiceProvider.first
     consumer = sp.consumers.first
