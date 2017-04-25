@@ -1,17 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  provider: MyString
   uid: MyString1
-  nickname: MyString1
   email: mymail1@foo.com
   name: MyString
-  image_url: http://foo.com/bar.png
 
 two:
-  provider: MyString
   uid: MyString2
-  nickname: MyString2
   email: mymail2@foo.com
   name: MyString
-  image_url: http://foo.com/bar.png
