@@ -10,7 +10,7 @@ one:
   client_secret: MyString1
 
 two:
-  name: MyString
+  name: MyString2
   user_id: two
   service_provider: two
   client_id_key: MyString2
