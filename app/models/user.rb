@@ -4,16 +4,11 @@ class User < ApplicationRecord
   has_many :consumers
 
   validates :uid, uniqueness: true, allow_nil: true
-  validates :nickname, uniqueness: true, allow_nil: true
-  validates :email, uniqueness: true, allow_nil: true
 
-  def self.find_or_create_by_auth(auth)
-    user = User.find_or_create_by!(provider: auth['provider'], uid: auth['uid'])
-
-    user.nickname = auth['info']['nickname']
-    user.email = auth['info']['email']
-    user.name = auth['info']['name']
-    user.image_url = auth['info']['image']
+  def self.find_or_create_by_auth(ldap_user)
+    user = User.find_or_create_by!(uid: ldap_user.uid)
+    user.email = ldap_user.mail
+    user.name = ldap_user.cn
 
     user.save!
     user

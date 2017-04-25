@@ -8,6 +8,6 @@ Rails.application.routes.draw do
   post '/:service_provider_id/oauth2/authorize', to: 'oauth2#authorize_redirect_with_code', as: 'oauth2_authorize_redirect_with_code'
   post '/:service_provider_id/oauth2/revoke', to: 'oauth2#revoke', as: 'oauth2_revoke'
   post '/:service_provider_id/oauth2/introspect', to: 'oauth2#introspect', as: 'oauth2_introspect'
-  get '/auth/:provider/callback', to: 'sessions#create', as: 'auth_callback'
+  post '/login', to: 'sessions#create'
   post '/logout', to: 'sessions#destroy'
 end

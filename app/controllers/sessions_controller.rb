@@ -1,7 +1,8 @@
 class SessionsController < ApplicationController
   def create
-    @user = User.find_or_create_by_auth(request.env['omniauth.auth'])
-    if @user
+    ldap_user = LdapUser.find(params['username'])
+    if ActiveLdap::UserPassword.valid?(params['password'], ldap_user.userPassword)
+      @user = User.find_or_create_by_auth(ldap_user)
       session[:user_id] = @user.id
       if session[:continued_url]
         url = session[:continued_url]
