@@ -42,4 +42,28 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_response(:success)
     assert_template(:authorize_login)
   end
+
+  test 'should get token by JSON on /oauth2/token for implicit with session' do
+    ldap_user = Fabricate(:great_user)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    params = {
+      response_type: 'token',
+      client_id: consumer.client_id_key,
+      redirect_uri: consumer.redirect_uris.first.uri,
+      scope: sp.scopes.map { |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_path(sp.id), headers: headers, params: params)
+    assert_response(:found)
+    params = URI.decode_www_form(URI.parse(response.location).fragment).to_h
+    assert_not_nil(params['access_token'])
+    assert_equal('bearer', params['token_type'])
+    assert_match(/^\d+$/, params['expires_in'])
+    puts sp.scopes.map { |s| s.name }.join(' ')
+    puts params['scope']
+    assert_equal(sp.scopes.map { |s| s.name }.join(' '), params['scope'])
+    assert_equal('abcABC', params['state'])
+  end
 end
