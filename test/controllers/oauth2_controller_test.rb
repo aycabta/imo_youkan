@@ -29,14 +29,14 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get login form on /oauth2/token for implicit without session' do
-    sp = ServiceProvider.first
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     consumer.run_callbacks(:commit)
     params = {
       response_type: 'token',
       client_id: consumer.client_id_key,
       redirect_uri: consumer.redirect_uris.first.uri,
-      scope: sp.scopes.join(' ')
+      scope: sp.scopes.map { |s| s.name }.join(' ')
     }
     get(oauth2_authorize_path(sp.id), headers: headers, params: params)
     assert_response(:success)
