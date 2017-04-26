@@ -32,6 +32,9 @@ GEM
       gettext
       gettext_i18n_rails
       locale
+    activeldap-fabrication (1.0.1)
+      activeldap
+      fabrication
     activemodel (5.0.2)
       activesupport (= 5.0.2)
     activerecord (5.0.2)
@@ -57,6 +60,7 @@ GEM
     concurrent-ruby (1.0.5)
     erubis (2.7.0)
     execjs (2.7.0)
+    fabrication (2.16.1)
     fast_gettext (1.4.0)
     ffi (1.9.18)
     gettext (3.2.2)
@@ -189,6 +193,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeldap
+  activeldap-fabrication
   byebug
   coffee-rails (~> 4.2)
   haml-rails

@@ -23,6 +23,7 @@ gem 'net-ldap'
 
 group :development, :test do
   gem 'byebug', platform: :mri
+  gem 'activeldap-fabrication'
 end
 
 group :development do

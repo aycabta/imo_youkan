@@ -13,7 +13,9 @@ module ImoYoukan
     # -- all .rb files in that directory are automatically loaded.
     config.generators do |g|
       g.template_engine(:haml)
-      g.test_framework(:test_unit)
+      g.test_framework(:test_unit, :fixture => true, :fixture_replacement => 'fabrication')
+      g.fixture_replacement(:fabrication, :dir => 'test/fabricators')
     end
+    config.app_generators.orm(:active_ldap)
   end
 end
