@@ -14,4 +14,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response(:found)
     assert_nil(assigns(:user))
   end
+
+  test 'should destroy session' do
+    ldap_user = Fabricate(:great_user)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    assert_response(:found)
+    assert_not_nil(assigns(:user))
+    post(logout_path)
+    assert_response(:found)
+    assert_redirected_to(root_path)
+    assert_nil(assigns(:user))
+  end
 end
