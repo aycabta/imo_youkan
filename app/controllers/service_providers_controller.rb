@@ -17,7 +17,7 @@ class ServiceProvidersController < ApplicationController
     return redirect_to(service_provider_path(@sp)) unless @sp.owner?(current_user)
     case params[:type]
     when 'add_user'
-      user = User.find_by(email: params[:email])
+      user = User.find_by(uid: params[:uid])
       return redirect_to(service_provider_path(@sp)) unless user
       @sp.add_user(user)
       @sp.save!

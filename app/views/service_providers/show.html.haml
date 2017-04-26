@@ -29,23 +29,23 @@
   - @sp.service_provider_users.each do |sp_user|
     %li
       %dl
-        %dt= 'name'
+        %dt= 'uid'
         %dd<
-          = sp_user.user.name
+          = sp_user.user.uid
           - if sp_user.is_owner
             %span<> &ensp;
             = '('
             %strong<>= 'owner'
             = ')'
-        %dt= 'nickname'
-        %dd= sp_user.user.nickname
+        %dt= 'name'
+        %dd= sp_user.user.name
         %dt= 'email'
         %dd= sp_user.user.email
 
 - if @is_owner
   = form_tag(service_provider_path(@sp), method: :put) do |f|
     = hidden_field_tag(:type, 'add_user')
-    = text_field_tag(:email, '', placeholder: 'e-mail address')
+    = text_field_tag(:uid, '', placeholder: 'uid')
     = submit_tag('Add user')
 
 %h2= 'Your consumers'
