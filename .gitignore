@@ -23,5 +23,7 @@
 *.swp
 
 config/secrets.yml
+config/database.yml
+config/ldap.yml
 
 db/schema.rb
