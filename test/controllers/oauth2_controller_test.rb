@@ -61,8 +61,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil(params['access_token'])
     assert_equal('bearer', params['token_type'])
     assert_match(/^\d+$/, params['expires_in'])
-    puts sp.scopes.map { |s| s.name }.join(' ')
-    puts params['scope']
     assert_equal(sp.scopes.map { |s| s.name }.join(' '), params['scope'])
     assert_equal('abcABC', params['state'])
   end
