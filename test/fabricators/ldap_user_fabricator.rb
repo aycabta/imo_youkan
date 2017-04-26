@@ -6,4 +6,5 @@ Fabricator(:great_user, :from => :ldap_user) do
   cn 'Great User'
   sn 'The Great'
   mail 'great_user@great_mail.com'
+  userPassword 'foobar'
 end
