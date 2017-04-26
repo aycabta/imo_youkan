@@ -1,7 +1,7 @@
 class OAuth2Controller < ApplicationController
   protect_from_forgery with: :null_session
   before_action :get_service_provider
-  before_action :check_content_type, only: [:token, :authorize, :revoke, :introspect]
+  before_action :check_content_type, only: [:token, :authorize, :revoke, :introspect], if: -> { request.post? }
 
   private def get_service_provider
     @sp = ServiceProvider.find(params[:service_provider_id])
