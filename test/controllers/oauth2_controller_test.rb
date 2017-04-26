@@ -1,13 +1,13 @@
 require 'test_helper'
 
 class OAuth2ControllerTest < ActionDispatch::IntegrationTest
-  test 'should fail /oauth2/token without Content-Type' do
-    get(oauth2_authorize_path(ServiceProvider.first.id))
+  test 'should fail /oauth2/token with invalid Content-Type' do
+    post(oauth2_token_path(ServiceProvider.first.id), headers: { 'CONTENT_TYPE': 'text/plain' })
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('invalid_request', json['error'])
     assert_equal('Request header validation failed.', json['error_description'])
-    assert_equal(' is invalid', json['error_details']['content_type'])
+    assert_equal('text/plain is invalid, must be application/x-www-form-urlencoded', json['error_details']['content_type'])
     assert_equal('error', json['status'])
   end
 
