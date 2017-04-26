@@ -12,6 +12,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     ldap_user = Fabricate(:great_user)
     post(login_path, params: { username: ldap_user.uid, password: '' })
     assert_response(:found)
+    assert_redirected_to(root_path)
     assert_nil(assigns(:user))
   end
 
