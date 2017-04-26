@@ -75,7 +75,7 @@ class Token < ApplicationRecord
       access_token: self.access_token,
       token_type: 'bearer',
       expires_in: 3600,
-      scope: 'basic',
+      scope: self.approved_scopes.map { |s| s.name }.join(' '),
       state: self.state
     }
     "#{self.redirect_uri.uri}##{redirect_params.to_param}"
