@@ -13,7 +13,7 @@ class OAuth2Controller < ApplicationController
         error: 'invalid_request',
         error_description: 'Request header validation failed.',
         error_details: {
-          content_type: "#{request.content_type} is invalid"
+          content_type: "#{request.content_type} is invalid, must be application/x-www-form-urlencoded"
         },
         status: 'error'
       }
