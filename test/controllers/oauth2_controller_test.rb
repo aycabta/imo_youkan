@@ -12,7 +12,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/token without response_type' do
-    headers = { CONTENT_TYPE: 'application/x-www-form-urlencoded' }
     get(oauth2_authorize_path(ServiceProvider.first.id), headers: headers)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
@@ -21,7 +20,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/token with unknown response_type' do
-    headers = { CONTENT_TYPE: 'application/x-www-form-urlencoded' }
     params = { response_type: 'unknown_type' }
     get(oauth2_authorize_path(ServiceProvider.first.id), headers: headers, params: params)
     assert_response(:bad_request)
@@ -31,7 +29,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get login form on /oauth2/token for implicit without session' do
-    headers = { CONTENT_TYPE: 'application/x-www-form-urlencoded' }
     sp = ServiceProvider.first
     consumer = sp.consumers.first
     consumer.run_callbacks(:commit)
