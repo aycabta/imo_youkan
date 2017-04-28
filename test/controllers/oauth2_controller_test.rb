@@ -12,7 +12,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/token without response_type' do
-    get(oauth2_authorize_path(ServiceProvider.first.id), headers: headers)
+    get(oauth2_authorize_path(ServiceProvider.first.id))
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('invalid_request', json['error'])
@@ -21,7 +21,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
 
   test 'should fail /oauth2/token with unknown response_type' do
     params = { response_type: 'unknown_type' }
-    get(oauth2_authorize_path(ServiceProvider.first.id), headers: headers, params: params)
+    get(oauth2_authorize_path(ServiceProvider.first.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('invalid_request', json['error'])
@@ -38,7 +38,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       redirect_uri: consumer.redirect_uris.first.uri,
       scope: sp.scopes.map { |s| s.name }.join(' ')
     }
-    get(oauth2_authorize_path(sp.id), headers: headers, params: params)
+    get(oauth2_authorize_path(sp.id), params: params)
     assert_response(:success)
     assert_template(:authorize_login)
   end
@@ -55,7 +55,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), headers: headers, params: params)
+    get(oauth2_authorize_path(sp.id), params: params)
     assert_response(:found)
     params = URI.decode_www_form(URI.parse(response.location).fragment).to_h
     assert_not_nil(params['access_token'])
