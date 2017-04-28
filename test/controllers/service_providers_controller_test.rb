@@ -20,4 +20,14 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_response(:found)
     assert_redirected_to(service_provider_path(assigns(:sp).id))
   end
+
+  test 'should show ServiceProvider' do
+    ldap_user = Fabricate(:great_user)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
+    user = User.find_by(uid: ldap_user.uid)
+    sp = ServiceProvider.includes(:users).find_by(service_provider_users: { is_owner: true, user: user })
+    get(service_provider_path(sp.id))
+    assert_response(:success)
+  end
 end
