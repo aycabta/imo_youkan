@@ -13,6 +13,13 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to(root_path)
   end
 
+  test 'should show' do
+    sign_in_as(:great_user)
+    post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
+    get(service_provider_path(assigns(:sp).id))
+    assert_response(:success)
+  end
+
   test 'should create ServiceProvider' do
     sign_in_as(:great_user)
     post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
