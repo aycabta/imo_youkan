@@ -46,6 +46,28 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_equal(sp.scopes[0].name, 'profile')
   end
 
+  test 'should not add scope to ServiceProvider as duplicated name' do
+    ldap_user = sign_in_as(:great_user)
+    post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
+    user = User.find_by(uid: ldap_user.uid)
+    sp = ServiceProvider.find(assigns(:sp).id)
+    params = {
+      type: 'add_scope',
+      name: 'profile',
+      description: 'user description'
+    }
+    put(service_provider_path(sp.id), params: params)
+    params = {
+      type: 'add_scope',
+      name: 'profile',
+      description: 'user description 2nd'
+    }
+    put(service_provider_path(sp.id), params: params)
+    assert_response(:found)
+    assert_equal(sp.scopes.size, 1)
+    assert_equal(flash[:scope_alert].size, 1)
+  end
+
   test 'should add user to ServiceProvider' do
     ldap_user = sign_in_as(:great_user)
     post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
