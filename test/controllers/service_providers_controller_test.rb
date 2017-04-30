@@ -5,7 +5,7 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     get(root_path)
     assert_response(:success)
     assert_nil(assigns(:sps))
-    assert_not_nil(assigns(:new_sp))
+    assert_nil(assigns(:new_sp))
   end
 
   test 'should redirect from show to index without session' do
