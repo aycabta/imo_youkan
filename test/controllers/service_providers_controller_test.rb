@@ -24,7 +24,7 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     ldap_user = sign_in_as(:great_user)
     post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
     user = User.find_by(uid: ldap_user.uid)
-    sp = ServiceProvider.includes(:users).find_by(service_provider_users: { is_owner: true, user: user })
+    sp = ServiceProvider.includes(:users).find_by(name: 'test service provider')
     get(service_provider_path(sp.id))
     assert_response(:success)
   end
