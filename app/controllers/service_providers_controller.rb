@@ -2,8 +2,10 @@ class ServiceProvidersController < ApplicationController
   before_action :authorize!, only: [:new, :create, :show]
 
   def index
-    @new_sp = ServiceProvider.new
-    @sps = ServiceProvider.includes(:users).where(users: { id: current_user.id }) if current_user
+    if current_user
+      @new_sp = ServiceProvider.new
+      @sps = ServiceProvider.includes(:users).where(users: { id: current_user.id })
+    end
   end
 
   def create
