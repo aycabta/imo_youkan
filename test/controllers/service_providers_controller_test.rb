@@ -27,5 +27,6 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     sp = ServiceProvider.includes(:users).find_by(name: 'test service provider')
     get(service_provider_path(sp.id))
     assert_response(:success)
+    assert_includes(sp.owners, user)
   end
 end
