@@ -13,6 +13,12 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to(root_path)
   end
 
+  test 'should not show with unknown ID' do
+    sign_in_as(:great_user)
+    get(service_provider_path(999))
+    assert_response(:not_found)
+  end
+
   test 'should show' do
     sign_in_as(:great_user)
     post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
