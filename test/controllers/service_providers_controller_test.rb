@@ -29,4 +29,20 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_response(:success)
     assert_includes(sp.owners, user)
   end
+
+  test 'should add scope to ServiceProvider' do
+    ldap_user = sign_in_as(:great_user)
+    post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
+    user = User.find_by(uid: ldap_user.uid)
+    sp = ServiceProvider.find(assigns(:sp).id)
+    params = {
+      type: 'add_scope',
+      name: 'profile',
+      description: 'user description'
+    }
+    put(service_provider_path(sp.id), params: params)
+    assert_response(:found)
+    assert_equal(sp.scopes.size, 1)
+    assert_equal(sp.scopes[0].name, 'profile')
+  end
 end
