@@ -60,4 +60,18 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_equal(sp.users.size, 2)
     assert_equal(sp.owners.size, 1)
   end
+
+  test 'should not add user to ServiceProvider' do
+    ldap_user = sign_in_as(:great_user)
+    post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
+    sp = ServiceProvider.find(assigns(:sp).id)
+    params = {
+      type: 'add_user',
+      uid: 'unknown_user',
+    }
+    put(service_provider_path(sp.id), params: params)
+    assert_response(:found)
+    assert_equal(sp.users.size, 1)
+    assert_equal(flash[:user_alert], ['unknown user: unknown_user'])
+  end
 end
