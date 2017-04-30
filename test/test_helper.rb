@@ -8,6 +8,11 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def sign_in_as(name)
+    ldap_user = Fabricate(name)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    ldap_user
+  end
 
   # LDAP: start
   setup do
