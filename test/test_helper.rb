@@ -13,17 +13,17 @@ class ActiveSupport::TestCase
   setup do
     @dumped_data = nil
     begin
-      @dumped_data = ActiveLdap::Base.dump(:scope => :one)
+      @dumped_data = ActiveLdap::Base.dump(scope: :one)
     rescue ActiveLdap::ConnectionError
     end
-    ActiveLdap::Base.delete_all(nil, :scope => :one)
+    ActiveLdap::Base.delete_all(nil, scope: :one)
     populate_ldap
   end
 
   teardown do
     if @dumped_data
       ActiveLdap::Base.setup_connection
-      ActiveLdap::Base.delete_all(nil, :scope => :one)
+      ActiveLdap::Base.delete_all(nil, scope: :one)
       ActiveLdap::Base.load(@dumped_data)
     end
   end
