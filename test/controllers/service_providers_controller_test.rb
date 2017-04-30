@@ -49,8 +49,7 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
   test 'should add user to ServiceProvider' do
     ldap_user = sign_in_as(:great_user)
     post(service_providers_path, params: { service_provider: { name: 'test service provider' } })
-    User.find_or_create_by_auth(Fabricate(:little_user))
-    user = User.find_by(uid: ldap_user.uid)
+    user = User.find_or_create_by_auth(Fabricate(:little_user))
     sp = ServiceProvider.find(assigns(:sp).id)
     params = {
       type: 'add_user',
