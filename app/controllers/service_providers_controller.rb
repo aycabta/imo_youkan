@@ -18,13 +18,18 @@ class ServiceProvidersController < ApplicationController
     case params[:type]
     when 'add_user'
       user = User.find_by(uid: params[:uid])
+      flash[:user_alert] = ["unknown user: #{params[:uid]}"]
       return redirect_to(service_provider_path(@sp)) unless user
       @sp.add_user(user)
       @sp.save!
     when 'add_scope'
-      scope = Scope.create!(service_provider: @sp, name: params[:name], description: params[:description])
-      @sp.scopes << scope
-      @sp.save!
+      scope = Scope.new(service_provider: @sp, name: params[:name], description: params[:description])
+      if scope.save
+        @sp.scopes << scope
+        @sp.save!
+      else
+        flash[:scope_alert] = scope.errors.full_messages
+      end
     end
     redirect_to(service_provider_path(@sp))
   end

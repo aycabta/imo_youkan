@@ -22,6 +22,10 @@
     = text_field_tag(:name, '', placeholder: 'name')
     = text_field_tag(:description, '', placeholder: 'description')
     = submit_tag('Add scope')
+  - if flash[:scope_alert]
+    %ul{ class: 'error' }
+      - flash.now[:scope_alert]&.each do |msg|
+        %li= msg
 
 %h2= 'Users'
 
@@ -47,6 +51,10 @@
     = hidden_field_tag(:type, 'add_user')
     = text_field_tag(:uid, '', placeholder: 'uid')
     = submit_tag('Add user')
+  - if flash[:user_alert]
+    %ul{ class: 'error' }
+      - flash.now[:user_alert]&.each do |msg|
+        %li= msg
 
 %h2= 'Your consumers'
 
