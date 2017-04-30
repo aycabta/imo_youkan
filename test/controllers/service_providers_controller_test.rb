@@ -8,6 +8,14 @@ class ServiceProvidersControllerTest < ActionDispatch::IntegrationTest
     assert_nil(assigns(:new_sp))
   end
 
+  test 'should get root with session' do
+    sign_in_as(:great_user)
+    get(root_path)
+    assert_response(:success)
+    assert_not_nil(assigns(:sps))
+    assert_not_nil(assigns(:new_sp))
+  end
+
   test 'should redirect from show to index without session' do
     get(service_provider_path(1))
     assert_redirected_to(root_path)
