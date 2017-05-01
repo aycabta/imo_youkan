@@ -19,4 +19,19 @@ class ConsumersControllerTest < ActionDispatch::IntegrationTest
     assert_response(:success)
     assert_not_nil(assigns(:consumer))
   end
+
+  test 'should update Consumer with add_redirect_uri' do
+    post(service_provider_consumers_path(@sp.id), params: { name: 'test consumer' })
+    consumer = Consumer.find_by(name: 'test consumer')
+    assert_equal(0, consumer.redirect_uris.size)
+    params = {
+      type: 'add_redirect_uri',
+      uri: 'http://foo.com'
+    }
+    put(service_provider_consumer_path(@sp.id, consumer.id), params: params)
+    assert_response(:found)
+    assert_redirected_to(service_provider_consumer_path(@sp.id, consumer.id))
+    consumer = Consumer.find_by(name: 'test consumer')
+    assert_equal(1, consumer.redirect_uris.size)
+  end
 end
