@@ -53,8 +53,23 @@ class OAuth2Controller < ApplicationController
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
     end
-    # TODO checks each params separately and returns error
-    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    consumer = Consumer.find_by(client_id_key: params[:client_id])
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id (#{params[:client_id]}) is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
+    if !consumer.redirect_uris.exists?(uri: params[:redirect_uri])
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id (#{params[:client_id]}) is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
     scopes = params[:scope].split(' ')
     rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
     if rejected_scopes.any?
