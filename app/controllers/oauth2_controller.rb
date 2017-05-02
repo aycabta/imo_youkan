@@ -51,6 +51,7 @@ class OAuth2Controller < ApplicationController
         error: 'invalid_scope',
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
       }
+      redirect_params[:state] = params[:state] if params[:state]
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
     end
     if current_user
