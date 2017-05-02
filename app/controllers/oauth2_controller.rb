@@ -91,6 +91,7 @@ class OAuth2Controller < ApplicationController
   end
 
   private def authorization_code
+    # TODO checks each params separately and returns error
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     splited_scopes = params[:scope].split(' ')
     rejected_scopes = consumer.service_provider.unknown_scopes(splited_scopes)
@@ -115,6 +116,7 @@ class OAuth2Controller < ApplicationController
   end
 
   def authorize_redirect_with_code
+    # TODO checks each params separately and returns error
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
     if token.code.nil?
@@ -126,6 +128,7 @@ class OAuth2Controller < ApplicationController
   end
 
   def revoke
+    # TODO checks each params separately and returns error
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
       token.access_token = nil
@@ -135,6 +138,7 @@ class OAuth2Controller < ApplicationController
   end
 
   def introspect
+    # TODO checks each params separately and returns error
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
       if token.expires_in >= Time.now
