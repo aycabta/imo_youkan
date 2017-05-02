@@ -124,9 +124,10 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
+    client_id = consumer.client_id_key + 'invalidsuffix'
     params = {
       response_type: 'token',
-      client_id: consumer.client_id_key + 'invalidsuffix',
+      client_id: client_id,
       redirect_uri: consumer.redirect_uris.first.uri,
       scope: sp.scopes.map { |s| s.name }.concat(['unknown', 'strange']).join(' '),
       state: 'abcABC'
@@ -136,7 +137,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_nil(json['access_token'])
     assert_equal('invalid_request', json['error'])
-    assert_equal("client_id (#{consumer.client_id_key + 'invalidsuffix'}) is invalid", json['error_description'])
+    assert_equal("client_id (#{client_id}) is invalid", json['error_description'])
     assert_equal('abcABC', json['state'])
   end
 
@@ -145,10 +146,11 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
+    redirect_uri = consumer.redirect_uris.first.uri + 'invalidsuffix'
     params = {
       response_type: 'token',
       client_id: consumer.client_id_key,
-      redirect_uri: consumer.redirect_uris.first.uri + 'invalidsuffix',
+      redirect_uri: redirect_uri,
       scope: sp.scopes.map { |s| s.name }.concat(['unknown', 'strange']).join(' '),
       state: 'abcABC'
     }
@@ -157,7 +159,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_nil(json['access_token'])
     assert_equal('invalid_request', json['error'])
-    assert_equal("redirect_uri (#{consumer.redirect_uris.first.uri + 'invalidsuffix'}) is invalid", json['error_description'])
+    assert_equal("redirect_uri (#{redirect_uri}) is invalid", json['error_description'])
     assert_equal('abcABC', json['state'])
   end
 end
