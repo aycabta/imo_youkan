@@ -46,7 +46,7 @@ class OAuth2Controller < ApplicationController
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     scopes = params[:scope].split(' ')
     rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
-    unless rejected_scopes.empty?
+    if rejected_scopes.any?
       redirect_params = {
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
       }
