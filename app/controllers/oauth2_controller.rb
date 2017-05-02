@@ -48,6 +48,7 @@ class OAuth2Controller < ApplicationController
     rejected_scopes = consumer.service_provider.unknown_scopes(scopes)
     if rejected_scopes.any?
       redirect_params = {
+        error: 'invalid_scope',
         error_description: "Unknown scopes: #{rejected_scopes.join(', ')}"
       }
       return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
