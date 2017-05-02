@@ -24,7 +24,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     get(oauth2_authorize_path(ServiceProvider.first.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
-    assert_equal('invalid_request', json['error'])
+    assert_equal('unsupported_response_type', json['error'])
     assert_equal('unknown_type is unknown', json['error_description'])
   end
 
