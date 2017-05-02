@@ -65,7 +65,7 @@ class OAuth2Controller < ApplicationController
     if !consumer.redirect_uris.exists?(uri: params[:redirect_uri])
       json = {
         error: 'invalid_request',
-        error_description: "client_id (#{params[:client_id]}) is invalid"
+        error_description: "redirect_uri (#{params[:redirect_uri]}) is invalid"
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
