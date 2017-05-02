@@ -83,5 +83,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_nil(params['access_token'])
     assert_equal('invalid_scope', params['error'])
     assert_equal('Unknown scopes: unknown, strange', params['error_description'])
+    assert_equal('abcABC', params['state'])
+    assert_equal(consumer.redirect_uris.first.uri, response.location[0..(response.location.rindex(?#) - 1)])
   end
 end
