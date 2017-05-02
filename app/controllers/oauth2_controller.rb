@@ -42,6 +42,17 @@ class OAuth2Controller < ApplicationController
   end
 
   private def implicit_token
+    if params[:client_id].nil? || params[:redirect_uri].nil?
+      needed = []
+      needed << 'client_id' if params[:client_id].nil?
+      needed << 'redirect_uri' if params[:redirect_uri].nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "#{needed.join(' and ')} #{needed.size == 1 ? 'is' : 'are'} required"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
     # TODO checks each params separately and returns error
     consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     scopes = params[:scope].split(' ')

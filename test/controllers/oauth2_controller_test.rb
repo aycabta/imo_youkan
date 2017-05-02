@@ -86,4 +86,36 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal('abcABC', params['state'])
     assert_equal(consumer.redirect_uris.first.uri, response.location[0..(response.location.rindex(?#) - 1)])
   end
+
+  test 'should fail /oauth2/token for implicit without required params with session' do
+    ldap_user = Fabricate(:great_user)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    params = {
+      response_type: 'token',
+      scope: sp.scopes.map { |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_path(sp.id), params: params)
+    assert_response(:bad_request)
+    json = JSON.parse(response.body)
+    assert_nil(params['access_token'])
+    assert_equal('invalid_request', json['error'])
+    assert_equal('client_id and redirect_uri are required', json['error_description'])
+    assert_equal('abcABC', json['state'])
+    params = {
+      response_type: 'token',
+      client_id: consumer.client_id_key,
+      scope: sp.scopes.map { |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_path(sp.id), params: params)
+    assert_response(:bad_request)
+    json = JSON.parse(response.body)
+    assert_nil(params['access_token'])
+    assert_equal('invalid_request', json['error'])
+    assert_equal('redirect_uri is required', json['error_description'])
+    assert_equal('abcABC', json['state'])
+  end
 end
