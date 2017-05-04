@@ -129,7 +129,6 @@ class OAuth2Controller < ApplicationController
   end
 
   def unauthorized
-    # TODO test
     redirect_params = {
       error: 'access_denied',
       error_description: 'Resource owner denied authorization'
