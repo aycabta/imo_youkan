@@ -162,4 +162,22 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal("redirect_uri (#{redirect_uri}) is invalid", json['error_description'])
     assert_equal('abcABC', json['state'])
   end
+
+  test 'should get authorize page on /oauth2/authorize' do
+    ldap_user = Fabricate(:great_user)
+    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    redirect_uri = consumer.redirect_uris.first.uri
+    params = {
+      response_type: 'code',
+      client_id: consumer.client_id_key,
+      redirect_uri: redirect_uri,
+      scope: sp.scopes.map{ |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_path(sp.id), params: params)
+    assert_response(:success)
+    assert_template(:authorize)
+  end
 end
