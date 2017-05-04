@@ -57,12 +57,12 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     }
     get(oauth2_authorize_path(sp.id), params: params)
     assert_response(:found)
-    params = URI.decode_www_form(URI.parse(response.location).fragment).to_h
-    assert_not_nil(params['access_token'])
-    assert_equal('bearer', params['token_type'])
-    assert_match(/^\d+$/, params['expires_in'])
-    assert_equal(sp.scopes.map { |s| s.name }.join(' '), params['scope'])
-    assert_equal('abcABC', params['state'])
+    queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
+    assert_not_nil(queries['access_token'])
+    assert_equal('bearer', queries['token_type'])
+    assert_match(/^\d+$/, queries['expires_in'])
+    assert_equal(sp.scopes.map { |s| s.name }.join(' '), queries['scope'])
+    assert_equal('abcABC', queries['state'])
   end
 
   test 'should fail /oauth2/token for implicit with unknown scopes with session' do
@@ -79,11 +79,11 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     }
     get(oauth2_authorize_path(sp.id), params: params)
     assert_response(:found)
-    params = URI.decode_www_form(URI.parse(response.location).fragment).to_h
-    assert_nil(params['access_token'])
-    assert_equal('invalid_scope', params['error'])
-    assert_equal('Unknown scopes: unknown, strange', params['error_description'])
-    assert_equal('abcABC', params['state'])
+    queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
+    assert_nil(queries['access_token'])
+    assert_equal('invalid_scope', queries['error'])
+    assert_equal('Unknown scopes: unknown, strange', queries['error_description'])
+    assert_equal('abcABC', queries['state'])
     assert_equal(consumer.redirect_uris.first.uri, response.location[0..(response.location.rindex(?#) - 1)])
   end
 
@@ -195,8 +195,8 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     }
     post(oauth2_authorize_path(sp.id), params: params)
     assert_response(:found)
-    params = URI.decode_www_form(URI.parse(response.location).query).to_h
-    assert_not_nil(params['code'])
-    assert_equal('abcABC', params['state'])
+    queries = URI.decode_www_form(URI.parse(response.location).query).to_h
+    assert_not_nil(queries['code'])
+    assert_equal('abcABC', queries['state'])
   end
 end
