@@ -128,6 +128,15 @@ class OAuth2Controller < ApplicationController
     redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
   end
 
+  def unauthorized
+    # TODO test
+    redirect_params = {
+      error: 'access_denied',
+      error_description: 'Resource owner denied authorization'
+    }
+    return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+  end
+
   def revoke
     # TODO checks each params separately and returns error
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })

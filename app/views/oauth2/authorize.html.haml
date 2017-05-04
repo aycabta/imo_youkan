@@ -10,3 +10,9 @@
   = hidden_field_tag(:state, params[:state])
   = hidden_field_tag(:redirect_uri, params[:redirect_uri])
   = submit_tag('Authorize')
+
+= form_tag(oauth2_unauthorized_path(@sp), method: :post) do |f|
+  = hidden_field_tag(:client_id, params[:client_id])
+  = hidden_field_tag(:state, params[:state])
+  = hidden_field_tag(:redirect_uri, params[:redirect_uri])
+  = submit_tag('Reject')
