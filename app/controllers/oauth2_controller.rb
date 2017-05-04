@@ -134,6 +134,7 @@ class OAuth2Controller < ApplicationController
       error: 'access_denied',
       error_description: 'Resource owner denied authorization'
     }
+    redirect_params[:state] = params[:state] if params[:state]
     return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
   end
 
