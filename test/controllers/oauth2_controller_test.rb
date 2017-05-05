@@ -176,7 +176,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map{ |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_code_path(sp.id), params: params)
     assert_response(:success)
     assert_template(:authorize)
   end
@@ -193,7 +193,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map{ |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    post(oauth2_authorize_path(sp.id), params: params)
+    post(oauth2_authorize_code_path(sp.id), params: params)
     assert_response(:found)
     queries = URI.decode_www_form(URI.parse(response.location).query).to_h
     assert_not_nil(queries['code'])
