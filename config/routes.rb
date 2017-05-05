@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :service_providers, only: [:create, :show, :update] do
     resources :consumers, only: [:index, :create, :update, :show]
   end
-  match '/:service_provider_id/oauth2/token', to: 'oauth2#token', as: 'oauth2_token', via: [:get, :post]
+  match '/:service_provider_id/oauth2/token', to: 'oauth2/token#create', as: 'oauth2_token', via: [:get, :post]
   get '/:service_provider_id/oauth2/authorize', to: 'oauth2/authorize_implicit#new', as: 'oauth2_authorize_implicit', constraints: ->(request) { request.params['response_type'] == 'token' }
   get '/:service_provider_id/oauth2/authorize', to: 'oauth2/authorize_code#new', as: 'oauth2_authorize_code', constraints: ->(request) { request.params['response_type'] == 'code' }
   post '/:service_provider_id/oauth2/authorize', to: 'oauth2/authorize_code#create', as: 'oauth2_authorize_redirect_with_code'
