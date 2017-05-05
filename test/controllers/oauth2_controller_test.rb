@@ -200,6 +200,22 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal('abcABC', queries['state'])
   end
 
+  test 'should get login form on /oauth2/token for authorization code without session' do
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    consumer.run_callbacks(:commit)
+    params = {
+      response_type: 'code',
+      client_id: consumer.client_id_key,
+      redirect_uri: consumer.redirect_uris.first.uri,
+      scope: sp.scopes.map { |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
+    assert_response(:success)
+    assert_template(:authorize_login)
+  end
+
   test 'should reject /oauth2/authorize for authorization code' do
     ldap_user = Fabricate(:great_user)
     post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
