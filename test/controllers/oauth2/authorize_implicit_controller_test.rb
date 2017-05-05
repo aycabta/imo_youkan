@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class OAuth2AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
+class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   test 'should get login form on /oauth2/authorize for implicit without session' do
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class OAuth2AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
+class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
   test 'should get authorize page on /oauth2/authorize' do
     ldap_user = Fabricate(:great_user)
     post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
