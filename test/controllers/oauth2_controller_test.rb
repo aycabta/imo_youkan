@@ -38,7 +38,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       redirect_uri: consumer.redirect_uris.first.uri,
       scope: sp.scopes.map { |s| s.name }.join(' ')
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:success)
     assert_template(:authorize_login)
   end
@@ -55,7 +55,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:found)
     queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
     assert_not_nil(queries['access_token'])
@@ -77,7 +77,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.concat(['unknown', 'strange']).join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:found)
     queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
     assert_nil(queries['access_token'])
@@ -97,7 +97,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_nil(params['access_token'])
@@ -132,7 +132,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.concat(['unknown', 'strange']).join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_nil(json['access_token'])
@@ -154,7 +154,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.concat(['unknown', 'strange']).join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_nil(json['access_token'])
