@@ -110,7 +110,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
       scope: sp.scopes.map { |s| s.name }.join(' '),
       state: 'abcABC'
     }
-    get(oauth2_authorize_path(sp.id), params: params)
+    get(oauth2_authorize_implicit_path(sp.id), params: params)
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_nil(params['access_token'])
