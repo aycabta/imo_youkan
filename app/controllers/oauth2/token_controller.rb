@@ -30,7 +30,23 @@ class OAuth2::TokenController < ApplicationController
 
   private def authorization_code_token
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
-    token = Token.joins(:redirect_uri).find_by(consumer: consumer, grant: 'authorization_code', code: params[:code], redirect_uris: { uri: params[:redirect_uri] })
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id or client_secret is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
+    token = Token.find_by(consumer: consumer, grant: 'authorization_code', code: params[:code])
+    if token.redirect_uri.uri != params[:redirect_uri]
+      json = {
+        error: 'invalid_request',
+        error_description: 'redirect_uri is invalid'
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
     token.set_tokens_for_authorization_code
     render(json: token.authorization_code_token_json)
   end
