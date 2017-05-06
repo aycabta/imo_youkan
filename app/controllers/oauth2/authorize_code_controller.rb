@@ -5,7 +5,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
 
   def new
     # TODO checks each params separately and returns error
-    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    consumer = @sp.consumers.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     splited_scopes = params[:scope].split(' ')
     rejected_scopes = consumer.service_provider.unknown_scopes(splited_scopes)
     unless rejected_scopes.empty?
@@ -31,7 +31,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
 
   def create
     # TODO checks each params separately and returns error
-    consumer = Consumer.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    consumer = @sp.consumers.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
     token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
     if token.code.nil? # TODO test for generation token and already existance token
       splited_scopes = params[:scope].split(' ')

@@ -14,7 +14,7 @@ class OAuth2::TokenController < ApplicationController
   end
 
   private def client_credentials_token
-    consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    consumer = @sp.consumers.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     if consumer.nil?
       json = {
         error: 'invalid_request',
@@ -29,7 +29,7 @@ class OAuth2::TokenController < ApplicationController
   end
 
   private def authorization_code_token
-    consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    consumer = @sp.consumers.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     if consumer.nil?
       json = {
         error: 'invalid_request',
@@ -52,7 +52,7 @@ class OAuth2::TokenController < ApplicationController
   end
 
   private def refresh_token
-    consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    consumer = @sp.consumers.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = Token.find_by(consumer: consumer, grant: 'authorization_code', refresh_token: params[:refresh_token])
     token.set_refreshed_access_token
     puts token.refresh_token_json

@@ -15,7 +15,7 @@ class OAuth2::AuthorizeImplicitController < ApplicationController
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
     end
-    consumer = Consumer.find_by(client_id_key: params[:client_id])
+    consumer = @sp.consumers.find_by(client_id_key: params[:client_id])
     if consumer.nil?
       json = {
         error: 'invalid_request',
