@@ -15,6 +15,14 @@ class OAuth2::TokenController < ApplicationController
 
   private def client_credentials_token
     consumer = Consumer.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id or client_secret is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
     token = consumer.tokens.create
     token.set_as_client_credentials
     render(json: token.client_credentials_token_json)
