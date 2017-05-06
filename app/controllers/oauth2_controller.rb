@@ -20,12 +20,29 @@ class OAuth2Controller < ApplicationController
   end
 
   def unauthorized
-    redirect_params = {
-      error: 'access_denied',
-      error_description: 'Resource owner denied authorization'
-    }
-    redirect_params[:state] = params[:state] if params[:state]
-    return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+    consumer = Consumer.find_by(client_id_key: params[:client_id])
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id (#{params[:client_id]}) is unknown"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    elsif !consumer.redirect_uris.exists?(uri: params[:redirect_uri])
+      json = {
+        error: 'invalid_request',
+        error_description: "redirect_uri (#{params[:redirect_uri]}) is unknown"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    else
+      redirect_params = {
+        error: 'access_denied',
+        error_description: 'Resource owner denied authorization'
+      }
+      redirect_params[:state] = params[:state] if params[:state]
+      return redirect_to("#{params[:redirect_uri]}##{redirect_params.to_param}")
+    end
   end
 
   def revoke
