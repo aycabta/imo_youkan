@@ -17,4 +17,20 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal('unsupported_response_type', json['error'])
     assert_equal('unknown_type is unknown', json['error_description'])
   end
+
+  test 'should deny access to /oauth2/unauthorize' do
+    sp = ServiceProvider.first
+    consumer = sp.consumers.first
+    params = {
+      client_id: consumer.client_id_key,
+      redirect_uri: consumer.redirect_uris.first.uri,
+      state: 'abcABC'
+    }
+    post(oauth2_unauthorized_path(sp), params: params)
+    assert_response(:found)
+    queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
+    assert_equal('access_denied', queries['error'])
+    assert_equal('Resource owner denied authorization', queries['error_description'])
+    assert_equal('abcABC', queries['state'])
+  end
 end
