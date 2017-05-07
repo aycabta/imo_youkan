@@ -39,6 +39,7 @@ class Token < ApplicationRecord
     self.grant = 'authorization_code'
     generate_code
     selected_scopes = self.consumer.service_provider.scopes.select { |s| scopes.include?(s.name) }
+    self.token_type = 'Bearer'
     self.approved_scopes = selected_scopes
     self.state = state
     self.redirect_uri = RedirectURI.find_by(consumer: self.consumer, uri: redirect_uri)
