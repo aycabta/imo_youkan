@@ -2,8 +2,7 @@ require 'test_helper'
 
 class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
   test 'should get authorize page on /oauth2/authorize' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     redirect_uri = consumer.redirect_uris.first.uri
@@ -20,8 +19,7 @@ class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get code on /oauth2/authorize for authorization code' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     redirect_uri = consumer.redirect_uris.first.uri
@@ -55,8 +53,7 @@ class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should reject /oauth2/authorize for authorization code' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     redirect_uri = consumer.redirect_uris.first.uri

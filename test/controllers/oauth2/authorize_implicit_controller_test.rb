@@ -17,8 +17,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get token by JSON on /oauth2/authorize for implicit with session' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     params = {
@@ -39,8 +38,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/authorize for implicit with unknown scopes with session' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     params = {
@@ -61,8 +59,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/authorize for implicit without required params with session' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     params = {
@@ -93,8 +90,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/authorize for implicit with invalid client_id' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     client_id = consumer.client_id_key + 'invalidsuffix'
@@ -115,8 +111,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should fail /oauth2/authorize for implicit with invalid redirect_uri' do
-    ldap_user = Fabricate(:great_user)
-    post(login_path, params: { username: ldap_user.uid, password: ldap_user.userPassword })
+    sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     redirect_uri = consumer.redirect_uris.first.uri + 'invalidsuffix'
