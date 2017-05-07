@@ -10,6 +10,13 @@ class OAuth2::TokenController < ApplicationController
       authorization_code_token
     elsif params[:grant_type] == 'refresh_token'
       refresh_token
+    else
+      json = {
+        error: 'invalid_grant',
+        error_description: 'grant_type is invalid'
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
     end
   end
 

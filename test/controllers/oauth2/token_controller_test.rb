@@ -10,5 +10,20 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     assert_equal('text/plain is invalid, must be application/x-www-form-urlencoded', json['error_details']['content_type'])
     assert_equal('error', json['status'])
   end
+
+  test 'should fail /oauth2/token with invalid grant' do
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    params = {
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      state: 'abcABC'
+    }
+    post(oauth2_token_path(sp), params: params)
+    assert_response(:bad_request)
+    json = JSON.parse(response.body)
+    assert_equal('invalid_grant', json['error'])
+    assert_equal('grant_type is invalid', json['error_description'])
+  end
 end
 
