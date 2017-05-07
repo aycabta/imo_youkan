@@ -11,7 +11,7 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     assert_equal('error', json['status'])
   end
 
-  test 'should fail /oauth2/token with invalid grant' do
+  test 'should fail /oauth2/token with invalid_grant' do
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
     params = {
