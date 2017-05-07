@@ -32,7 +32,7 @@ class OAuth2::TokenController < ApplicationController
     end
     token = consumer.tokens.create
     token.set_as_client_credentials
-    render(json: token.client_credentials_token_json)
+    render(json: token.client_credentials_token_json.merge(params[:state] ? { state: params[:state] } : {}))
   end
 
   private def authorization_code_token
@@ -55,7 +55,7 @@ class OAuth2::TokenController < ApplicationController
       return render(json: json, status: :bad_request)
     end
     token.set_tokens_for_authorization_code
-    render(json: token.authorization_code_token_json)
+    render(json: token.authorization_code_token_json.merge(params[:state] ? { state: params[:state] } : {}))
   end
 
   private def refresh_token
@@ -63,6 +63,6 @@ class OAuth2::TokenController < ApplicationController
     token = Token.find_by(consumer: consumer, grant: 'authorization_code', refresh_token: params[:refresh_token])
     token.set_refreshed_access_token
     puts token.refresh_token_json
-    render(json: token.refresh_token_json)
+    render(json: token.refresh_token_json.merge(params[:state] ? { state: params[:state] } : {}))
   end
 end
