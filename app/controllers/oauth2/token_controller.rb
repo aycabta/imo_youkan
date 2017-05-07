@@ -62,7 +62,6 @@ class OAuth2::TokenController < ApplicationController
     consumer = @sp.consumers.find_by(client_id_key: params[:client_id], client_secret: params[:client_secret])
     token = Token.find_by(consumer: consumer, grant: 'authorization_code', refresh_token: params[:refresh_token])
     token.set_refreshed_access_token
-    puts token.refresh_token_json
     render(json: token.refresh_token_json.merge(params[:state] ? { state: params[:state] } : {}))
   end
 end
