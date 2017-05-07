@@ -19,7 +19,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
       @scopes = consumer.service_provider.scopes.select { |s| splited_scopes.include?(s.name) }
       token = consumer.tokens.find_by(grant: 'authorization_code', user: current_user)
       if token.nil? || token.code.nil?
-      render(template: 'oauth2/authorize')
+        render(template: 'oauth2/authorize')
       else
         redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
       end
