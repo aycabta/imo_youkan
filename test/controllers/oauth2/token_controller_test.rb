@@ -38,6 +38,7 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     post(oauth2_token_path(sp), params: params)
     assert_response(:success)
     json = JSON.parse(response.body)
+    assert_equal('success', json['status'])
     assert_not_nil(json['access_token'])
     assert_equal('Bearer', json['token_type'])
     assert_kind_of(Integer, json['expires_in'])
