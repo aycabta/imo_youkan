@@ -31,7 +31,7 @@ class OAuth2::AuthorizeImplicitControllerTest < ActionDispatch::IntegrationTest
     assert_response(:found)
     queries = URI.decode_www_form(URI.parse(response.location).fragment).to_h
     assert_not_nil(queries['access_token'])
-    assert_equal('bearer', queries['token_type'])
+    assert_equal('Bearer', queries['token_type'])
     assert_match(/^\d+$/, queries['expires_in'])
     assert_equal(sp.scopes.map { |s| s.name }.join(' '), queries['scope'])
     assert_equal('abcABC', queries['state'])

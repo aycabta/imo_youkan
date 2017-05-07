@@ -73,7 +73,7 @@ class Token < ApplicationRecord
   def redirect_uri_to_implicit_token
     redirect_params = {
       access_token: self.access_token,
-      token_type: 'bearer',
+      token_type: 'Bearer',
       expires_in: 3600,
       scope: self.approved_scopes.map { |s| s.name }.join(' '),
       state: self.state
