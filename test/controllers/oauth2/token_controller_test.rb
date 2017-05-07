@@ -25,5 +25,23 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     assert_equal('invalid_grant', json['error'])
     assert_equal('grant_type is invalid', json['error_description'])
   end
+
+  test 'should get /oauth2/token with client_credentials' do
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    params = {
+      grant_type: 'client_credentials',
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      state: 'abcABC'
+    }
+    post(oauth2_token_path(sp), params: params)
+    assert_response(:success)
+    json = JSON.parse(response.body)
+    assert_not_nil(json['access_token'])
+    assert_equal('Bearer', json['token_type'])
+    assert_kind_of(Integer, json['expires_in'])
+    assert_equal('abcABC', json['state'])
+  end
 end
 
