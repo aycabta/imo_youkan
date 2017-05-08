@@ -22,6 +22,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
         render(template: 'oauth2/authorize')
       else
         token.redirect_uri = consumer.redirect_uris.find_by(uri: params[:redirect_uri])
+        token.state = params[:state]
         redirect_to(token.redirect_uri_to_authorize_redirect_with_code)
       end
     else
