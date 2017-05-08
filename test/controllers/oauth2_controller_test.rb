@@ -89,4 +89,30 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal(true, json['active'])
     assert_equal('', json['scope'])
   end
+
+  test 'should get /oauth2/introspect with implicit' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create!(grant: 'implicit', user: user)
+    redirect_uri = consumer.redirect_uris.first.uri
+    scopes = sp.scopes.map{ |s| s.name }
+    state = 'abcABC'
+    token.set_as_implicit(scopes, state, redirect_uri)
+    params = {
+      grant_type: 'authorization_code',
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      redirect_uri: redirect_uri,
+      token: token.access_token,
+      state: state
+    }
+    post(oauth2_introspect_path(sp), params: params)
+    json = JSON.parse(response.body)
+    assert_equal(true, json['active'])
+    assert_equal(scopes.join(' '), json['scope'])
+    assert_equal(redirect_uri, json['redirect_uri'])
+    assert_equal(ldap_user['uid'], json['user']['uid'])
+  end
 end
