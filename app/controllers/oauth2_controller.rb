@@ -62,7 +62,21 @@ class OAuth2Controller < ApplicationController
     if token
       if token.expires_in >= Time.now
         # TODO scope and others (username, email, redirect_uri, ...)
-        render(json: { active: true })
+        json = {
+          active: true,
+          scope: token.approved_scopes.map(&:name).join(' '),
+        }
+        if token.redirect_uri
+          json[:redirect_uri] = token.redirect_uri.uri
+        end
+        if token.user
+          json[:user] = {
+            uid: token.user.uid,
+            name: token.user.name,
+            email: token.user.email
+          }
+        end
+        render(json: json)
       else
         render(json: { active: false })
       end
