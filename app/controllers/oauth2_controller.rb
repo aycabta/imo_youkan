@@ -76,12 +76,17 @@ class OAuth2Controller < ApplicationController
             email: token.user.email
           }
         end
+        json[:state] = params[:state] if params[:state]
         render(json: json)
       else
-        render(json: { active: false })
+        json = { active: false }
+        json[:state] = params[:state] if params[:state]
+        render(json: json)
       end
     else
-      render(json: { active: false })
+      json = { active: false }
+      json[:state] = params[:state] if params[:state]
+      render(json: json)
     end
   end
 end
