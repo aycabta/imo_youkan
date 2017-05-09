@@ -113,4 +113,24 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal(ldap_user['uid'], json['user']['uid'])
     assert_equal(state, json['state'])
   end
+
+  test 'should fail /oauth2/introspect with invalid token' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create
+    state = 'abcABC'
+    token.set_as_client_credentials
+    params = {
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      token: token.access_token + 'invalid',
+      state: state
+    }
+    post(oauth2_introspect_path(sp), params: params)
+    json = JSON.parse(response.body)
+    assert_equal(false, json['active'])
+    assert_equal(state, json['state'])
+  end
 end
