@@ -77,10 +77,8 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     state = 'abcABC'
     token.set_as_client_credentials
     params = {
-      grant_type: 'authorization_code',
       client_id: consumer.client_id_key,
       client_secret: consumer.client_secret,
-      redirect_uri: redirect_uri,
       token: token.access_token,
       state: state
     }
@@ -101,10 +99,8 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     state = 'abcABC'
     token.set_as_implicit(scopes, state, redirect_uri)
     params = {
-      grant_type: 'authorization_code',
       client_id: consumer.client_id_key,
       client_secret: consumer.client_secret,
-      redirect_uri: redirect_uri,
       token: token.access_token,
       state: state
     }
