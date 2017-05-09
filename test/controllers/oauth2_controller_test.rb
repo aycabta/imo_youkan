@@ -86,6 +86,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_equal(true, json['active'])
     assert_equal('', json['scope'])
+    assert_equal(state, json['state'])
   end
 
   test 'should get /oauth2/introspect with implicit' do
@@ -110,5 +111,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal(scopes.join(' '), json['scope'])
     assert_equal(redirect_uri, json['redirect_uri'])
     assert_equal(ldap_user['uid'], json['user']['uid'])
+    assert_equal(state, json['state'])
   end
 end
