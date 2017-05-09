@@ -61,7 +61,6 @@ class OAuth2Controller < ApplicationController
     token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if token
       if token.expires_in >= Time.now
-        # TODO scope and others (username, email, redirect_uri, ...)
         json = {
           active: true,
           scope: token.approved_scopes.map(&:name).join(' '),
