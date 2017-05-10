@@ -24,14 +24,14 @@ class OAuth2Controller < ApplicationController
     if consumer.nil?
       json = {
         error: 'invalid_request',
-        error_description: "client_id (#{params[:client_id]}) is unknown"
+        error_description: 'client_id is unknown'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
     elsif !consumer.redirect_uris.exists?(uri: params[:redirect_uri])
       json = {
         error: 'invalid_request',
-        error_description: "redirect_uri (#{params[:redirect_uri]}) is unknown"
+        error_description: 'redirect_uri is unknown'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)

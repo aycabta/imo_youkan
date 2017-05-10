@@ -46,7 +46,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('invalid_request', json['error'])
-    assert_equal("client_id (#{consumer.client_id_key + 'unknown'}) is unknown", json['error_description'])
+    assert_equal("client_id is unknown", json['error_description'])
     assert_equal('abcABC', json['state'])
   end
 
@@ -63,7 +63,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('invalid_request', json['error'])
-    assert_equal("redirect_uri (#{redirect_uri}) is unknown", json['error_description'])
+    assert_equal("redirect_uri is unknown", json['error_description'])
     assert_equal('abcABC', json['state'])
   end
 
