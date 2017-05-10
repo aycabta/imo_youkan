@@ -56,9 +56,17 @@ class OAuth2Controller < ApplicationController
   end
 
   def introspect
-    # TODO checks each params separately and returns error
     # TODO checks scope and user
-    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    consumer = Consumer.find_by({ client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id or client_secret is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
+    token = consumer.tokens.find_by(access_token: params[:token])
     if token
       if token.expires_in >= Time.now
         json = {
