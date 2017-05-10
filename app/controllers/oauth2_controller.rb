@@ -56,7 +56,6 @@ class OAuth2Controller < ApplicationController
   end
 
   def introspect
-    # TODO checks scope and user
     consumer = Consumer.find_by({ client_id_key: params[:client_id], client_secret: params[:client_secret] })
     if consumer.nil?
       json = {
