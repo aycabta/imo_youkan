@@ -133,4 +133,24 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal(false, json['active'])
     assert_equal(state, json['state'])
   end
+
+  test 'should fail /oauth2/introspect with invalid client_secret' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create
+    state = 'abcABC'
+    token.set_as_client_credentials
+    params = {
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret + 'invalid',
+      token: token.access_token + 'invalid',
+      state: state
+    }
+    post(oauth2_introspect_path(sp), params: params)
+    json = JSON.parse(response.body)
+    assert_equal('invalid_request', json['error'])
+    assert_equal('client_id or client_secret is invalid', json['error_description'])
+  end
 end
