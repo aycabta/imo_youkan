@@ -46,13 +46,30 @@ class OAuth2Controller < ApplicationController
   end
 
   def revoke
-    # TODO checks each params separately and returns error
-    token = Token.includes(:consumer).find_by(access_token: params[:token], consumers: { client_id_key: params[:client_id], client_secret: params[:client_secret] })
-    if token
+    consumer = Consumer.find_by({ client_id_key: params[:client_id], client_secret: params[:client_secret] })
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: 'client_id or client_secret is invalid'
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
+    token = consumer.tokens.find_by(access_token: params[:token])
+    if token.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: 'token is invalid'
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    else
       token.access_token = nil
       token.save!
+      json = { success: true }
+      json[:state] = params[:state] if params[:state]
+      render(json: json)
     end
-    render(json: {})
   end
 
   def introspect
