@@ -197,4 +197,27 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_equal(true, json['success'])
     assert_equal(state, json['state'])
   end
+
+  test 'should fail /oauth2/revoke with invalid access_token' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create!(grant: 'implicit', user: user)
+    redirect_uri = consumer.redirect_uris.first.uri
+    scopes = sp.scopes.map{ |s| s.name }
+    state = 'abcABC'
+    token.set_as_implicit(scopes, state, redirect_uri)
+    params = {
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      token: token.access_token + 'invalid',
+      state: state
+    }
+    post(oauth2_revoke_path(sp), params: params)
+    json = JSON.parse(response.body)
+    assert_equal('invalid_request', json['error'])
+    assert_equal('token is invalid', json['error_description'])
+    assert_equal(state, json['state'])
+  end
 end
