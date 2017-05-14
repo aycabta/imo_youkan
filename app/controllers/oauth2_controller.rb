@@ -77,7 +77,7 @@ class OAuth2Controller < ApplicationController
     if consumer.nil?
       json = {
         error: 'invalid_request',
-        error_description: "client_id or client_secret is invalid"
+        error_description: 'client_id or client_secret is invalid'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
