@@ -15,7 +15,7 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     assert_response(:bad_request)
     json = JSON.parse(response.body)
     assert_equal('unsupported_response_type', json['error'])
-    assert_equal('unknown_type is unknown', json['error_description'])
+    assert_equal('response_type is unknown', json['error_description'])
   end
 
   test 'should deny access to /oauth2/unauthorize' do

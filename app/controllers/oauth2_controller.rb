@@ -13,7 +13,7 @@ class OAuth2Controller < ApplicationController
     else
       json = {
         error: 'unsupported_response_type',
-        error_description: "#{params[:response_type]} is unknown"
+        error_description: 'response_type is unknown'
       }
       render(status: :bad_request, json: json)
     end
