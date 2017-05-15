@@ -74,5 +74,31 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     assert_equal(sp.scopes.map{ |s| s.name }.join(' '), json['scope'])
     assert_equal('abcABC', json['state'])
   end
+
+  test 'should fail /oauth2/token with authorization_code' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create!(grant: 'authorization_code', user: user)
+    redirect_uri = consumer.redirect_uris.first.uri
+    state = 'abcABC'
+    token.set_as_authorization_code(sp.scopes.map(&:name), state, redirect_uri)
+    params = {
+      grant_type: 'authorization_code',
+      client_id: consumer.client_id_key,
+      client_secret: consumer.client_secret,
+      redirect_uri: redirect_uri,
+      code: token.code + 'invalid',
+      scope: sp.scopes.map{ |s| s.name }.join(' '),
+      state: state
+    }
+    post(oauth2_token_path(sp.id), params: params)
+    assert_response(:bad_request)
+    json = JSON.parse(response.body)
+    assert_equal('invalid_request', json['error'])
+    assert_equal('code is invalid', json['error_description'])
+    assert_equal('abcABC', json['state'])
+  end
 end
 
