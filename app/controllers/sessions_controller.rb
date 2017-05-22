@@ -1,7 +1,6 @@
 class SessionsController < ApplicationController
   def create
     ldap_user = LdapUser.first(params['username'])
-    # TODO show Flash message
     if !ldap_user.nil? && ActiveLdap::UserPassword.valid?(params['password'], ldap_user.userPassword)
       @user = User.find_or_create_by_auth(ldap_user)
       session[:user_id] = @user.id
