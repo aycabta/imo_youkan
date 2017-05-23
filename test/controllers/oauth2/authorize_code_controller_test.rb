@@ -18,6 +18,26 @@ class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
     assert_template(:authorize)
   end
 
+  test 'should fail authorize page on /oauth2/authorize with invalid client_id' do
+    sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    redirect_uri = consumer.redirect_uris.first.uri
+    params = {
+      response_type: 'code',
+      client_id: consumer.client_id_key + 'invalid',
+      redirect_uri: redirect_uri,
+      scope: sp.scopes.map{ |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    get(oauth2_authorize_code_path(sp.id), params: params)
+    assert_response(:bad_request)
+    json = JSON.parse(response.body)
+    assert_equal('abcABC', json['state'])
+    assert_equal('invalid_request', json['error'])
+    assert_equal('client_id is invalid', json['error_description'])
+  end
+
   test 'should get code on /oauth2/authorize for authorization code' do
     sign_in_as(:great_user)
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
