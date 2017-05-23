@@ -50,7 +50,24 @@ class OAuth2::AuthorizeCodeController < ApplicationController
 
   def create
     # TODO checks each params separately and returns error
-    consumer = @sp.consumers.includes(:redirect_uris).find_by(client_id_key: params[:client_id], redirect_uris: { uri: params[:redirect_uri] })
+    consumer = @sp.consumers.find_by(client_id_key: params[:client_id])
+    if consumer.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "client_id is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
+    redirect_uri = consumer.redirect_uris.find_by(uri: params[:redirect_uri])
+    if redirect_uri.nil?
+      json = {
+        error: 'invalid_request',
+        error_description: "redirect_uri is invalid"
+      }
+      json[:state] = params[:state] if params[:state]
+      return render(json: json, status: :bad_request)
+    end
     token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
     if token.code.nil? # TODO test for generation token and already existance token
       splited_scopes = params[:scope].split(' ')
