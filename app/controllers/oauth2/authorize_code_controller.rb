@@ -9,7 +9,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
     if consumer.nil?
       json = {
         error: 'invalid_request',
-        error_description: "client_id is invalid"
+        error_description: 'client_id is invalid'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
@@ -18,7 +18,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
     if redirect_uri.nil?
       json = {
         error: 'invalid_request',
-        error_description: "redirect_uri is invalid"
+        error_description: 'redirect_uri is invalid'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
@@ -54,7 +54,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
     if consumer.nil?
       json = {
         error: 'invalid_request',
-        error_description: "client_id is invalid"
+        error_description: 'client_id is invalid'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
@@ -63,7 +63,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
     if redirect_uri.nil?
       json = {
         error: 'invalid_request',
-        error_description: "redirect_uri is invalid"
+        error_description: 'redirect_uri is invalid'
       }
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
