@@ -4,7 +4,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
   before_action :check_content_type, if: -> { request.post? }
 
   def new
-    # TODO checks each params separately and returns error
+    # TODO add test for checking each params separately and returns error
     consumer = @sp.consumers.find_by(client_id_key: params[:client_id])
     if consumer.nil?
       json = {
