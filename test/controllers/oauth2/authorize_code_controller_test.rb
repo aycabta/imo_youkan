@@ -76,6 +76,30 @@ class OAuth2::AuthorizeCodeControllerTest < ActionDispatch::IntegrationTest
     assert_equal('abcABC', queries['state'])
   end
 
+  test 'should get existed code on /oauth2/authorize for authorization code' do
+    ldap_user = sign_in_as(:great_user)
+    sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
+    consumer = sp.consumers.first
+    user = User.find_by(uid: ldap_user.uid)
+    token = consumer.tokens.create!(grant: 'authorization_code', user: user)
+    redirect_uri = consumer.redirect_uris.first.uri
+    state = 'abcABC'
+    token.set_as_authorization_code(sp.scopes.map(&:name), state, redirect_uri)
+    code = token.code
+    redirect_uri = consumer.redirect_uris.first.uri
+    params = {
+      client_id: consumer.client_id_key,
+      redirect_uri: redirect_uri,
+      scope: sp.scopes.map{ |s| s.name }.join(' '),
+      state: 'abcABC'
+    }
+    post(oauth2_authorize_code_path(sp.id), params: params)
+    assert_response(:found)
+    queries = URI.decode_www_form(URI.parse(response.location).query).to_h
+    assert_equal(code, queries['code'])
+    assert_equal('abcABC', queries['state'])
+  end
+
   test 'should get login form on /oauth2/authorize for authorization code without session' do
     sp = ServiceProvider.all.max{ |a, b| a.scopes.size <=> b.scopes.size }
     consumer = sp.consumers.first
