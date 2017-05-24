@@ -68,7 +68,7 @@ class OAuth2::AuthorizeCodeController < ApplicationController
       return render(json: json, status: :bad_request)
     end
     token = consumer.tokens.find_or_create_by!(grant: 'authorization_code', user: current_user)
-    if token.code.nil? # TODO test for generation token and already existance token
+    if token.code.nil?
       splited_scopes = params[:scope].split(' ')
       scopes = consumer.service_provider.scopes.select { |s| splited_scopes.include?(s.name) }
       token.set_as_authorization_code(scopes, params[:state], params[:redirect_uri])
