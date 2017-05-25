@@ -48,7 +48,6 @@ class OAuth2::AuthorizeCodeController < ApplicationController
   end
 
   def create
-    # TODO add test for checking each params separately and returns error
     consumer = @sp.consumers.find_by(client_id_key: params[:client_id])
     if consumer.nil?
       json = {
