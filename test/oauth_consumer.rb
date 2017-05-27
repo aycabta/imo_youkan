@@ -12,8 +12,8 @@ end
 use OmniAuth::Builder do
   provider(
     :imo_youkan,
-    'client_id', 'client_secret', # TODO generate
-    scope: 'basic great aaa')
+    ENV['CLIENT_ID'], ENV['CLIENT_SECRET'],
+    scope: 'basic great')
 end
 
 get '/' do
