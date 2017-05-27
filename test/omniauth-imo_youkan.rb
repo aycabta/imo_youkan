@@ -39,7 +39,15 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= access_token.get('/oauth2/introspect').parsed
+        params = {
+          client_id: @options[:client_id],
+          client_secret: @options[:client_secret],
+          token: access_token.token
+        }
+        @raw_info ||= access_token.post('/1/oauth2/introspect', params) { |req|
+          req.params = params
+        }.parsed
+        puts @raw_info
       end
     end
   end
