@@ -7,22 +7,14 @@ module OmniAuth
         full_host + script_name + callback_path
       end
 
-      # Give your strategy a name.
       option :name, 'imo_youkan'
 
-      # This is where you pass the options you would pass when
-      # initializing your consumer from the OAuth gem.
       option :client_options, {
         site: 'http://localhost:3000/1',
         authorize_url: 'http://localhost:3000/1/oauth2/authorize',
         token_url: 'http://localhost:3000/1/oauth2/token'
       }
 
-      # These are called after authentication has succeeded. If
-      # possible, you should try to set the UID without making
-      # additional calls (if the user id is returned with the token
-      # or as a URI parameter). This may not be possible with all
-      # providers.
       uid { raw_info['user']['uid'] }
 
       info do
