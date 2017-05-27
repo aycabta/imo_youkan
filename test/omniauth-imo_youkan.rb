@@ -47,7 +47,6 @@ module OmniAuth
         @raw_info ||= access_token.post('/1/oauth2/introspect', params) { |req|
           req.params = params
         }.parsed
-        puts @raw_info
       end
     end
   end
