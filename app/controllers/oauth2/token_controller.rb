@@ -45,7 +45,7 @@ class OAuth2::TokenController < ApplicationController
       json[:state] = params[:state] if params[:state]
       return render(json: json, status: :bad_request)
     end
-    token = consumer.tokens.find_by(grant: 'authorization_code', code: params[:code], user: current_user)
+    token = consumer.tokens.find_by(grant: 'authorization_code', code: params[:code])
     if token.nil?
       json = {
         error: 'invalid_request',
