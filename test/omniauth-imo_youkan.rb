@@ -36,7 +36,7 @@ module OmniAuth
           client_secret: @options[:client_secret],
           token: access_token.token
         }
-        @raw_info ||= access_token.post('/1/oauth2/introspect', params) { |req|
+        @raw_info ||= access_token.post('/1/oauth2/introspect') { |req|
           req.params = params
         }.parsed
       end
