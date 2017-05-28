@@ -13,7 +13,7 @@ use OmniAuth::Builder do
   provider(
     :imo_youkan,
     ENV['CLIENT_ID'], ENV['CLIENT_SECRET'],
-    scope: 'basic great')
+    scope: ENV['SCOPE'])
 end
 
 get '/' do
