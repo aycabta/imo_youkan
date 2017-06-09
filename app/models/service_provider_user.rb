@@ -5,4 +5,3 @@ class ServiceProviderUser < ApplicationRecord
   validates :service_provider_id, uniqueness: { scope: [:user_id] }
   validates :is_owner, inclusion: { in: [true, false] }
 end
-

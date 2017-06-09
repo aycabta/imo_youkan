@@ -16,4 +16,3 @@ production:
   base: dc=production,dc=local,dc=net
   bind_dn: cn=admin,dc=local,dc=net
   password: secret
-

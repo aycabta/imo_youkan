@@ -101,4 +101,3 @@ class OAuth2::TokenControllerTest < ActionDispatch::IntegrationTest
     assert_equal('abcABC', json['state'])
   end
 end
-
