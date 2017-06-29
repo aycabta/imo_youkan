@@ -73,7 +73,6 @@ class OAuth2ControllerTest < ActionDispatch::IntegrationTest
     consumer = sp.consumers.first
     user = User.find_by(uid: ldap_user.uid)
     token = consumer.tokens.create
-    redirect_uri = consumer.redirect_uris.first.uri
     state = 'abcABC'
     token.set_as_client_credentials
     params = {
