@@ -32,7 +32,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'omniauth-oauth2'
-  gem 'sinatra'
+  gem 'sinatra', '>= 2.0.1'
 end
 
 group :test do
